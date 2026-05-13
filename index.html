@@ -34,22 +34,20 @@
             position: relative;
             top: 0;
             padding: 2rem 3rem 1rem 3rem;
-            text-align: center;
+            text-align: left;
             z-index: 40;
             transition: opacity 0.8s ease, background-color 0.8s ease, box-shadow 0.8s ease, border-color 0.8s ease;
             width: 100%;
             flex-shrink: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
             background-color: transparent;
             border-bottom: 1px solid transparent;
         }
 
         #ui-layer.level3-mode {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: flex-start;
             background-color: var(--bg-color);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.95);
             border-bottom: 1px solid rgba(212, 175, 55, 0.15);
@@ -58,7 +56,7 @@
         .titles-wrapper {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             transition: all 0.8s ease;
         }
 
@@ -69,7 +67,7 @@
 
         h1 {
             font-family: var(--brand-font);
-            font-size: 2.8rem;
+            font-size: 2.4rem;
             color: #fff;
             letter-spacing: 4px;
             margin-bottom: 0.5rem;
@@ -96,9 +94,6 @@
         }
 
         #btn-guide {
-            position: absolute;
-            top: 30px;
-            right: 40px;
             background: transparent;
             border: 1px solid var(--gold-accent);
             color: var(--gold-accent);
@@ -110,7 +105,11 @@
             letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 50;
+            margin-top: 0.5rem;
+        }
+
+        #ui-layer.level3-mode #btn-guide {
+            display: none;
         }
 
         #btn-guide:hover {
@@ -573,21 +572,19 @@
         @media (max-width: 900px) {
             .content-wrapper { flex-direction: column; gap: 3rem; margin-top: 0;}
             .perspective-container { height: 55vh; width: calc(55vh * 0.767); }
-            #ui-layer { padding: 1.5rem 1.5rem 1rem 1.5rem; }
+            #ui-layer { padding: 1.5rem 1.5rem 1rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
             #ui-layer.level3-mode { flex-direction: column; align-items: flex-start; gap: 1rem; }
             #ui-layer.level3-mode .titles-wrapper { align-items: flex-start; text-align: left; }
             .btn-back-header { margin-top: 0; padding: 0.6rem 1.2rem; font-size: 0.75rem; }
+            #btn-guide { margin-top: 0; padding: 0.6rem 1.2rem; font-size: 0.75rem; }
             #level3-view { padding-top: 180px; }
-            h1 { font-size: 2rem; }
-            #btn-guide { top: 15px; right: 15px; }
+            h1 { font-size: 1.8rem; }
             .edu-content { padding: 2rem; }
         }
 
     </style>
 </head>
 <body>
-
-    <button id="btn-guide" onclick="openGuide()">Learn the Magic</button>
 
     <div id="edu-modal">
         <div class="edu-content">
@@ -618,10 +615,10 @@
             <span>&#8592;</span> Return to the Source
         </button>
         <div class="titles-wrapper" id="ui-titles">
-            <div class="level-indicator" id="ui-level">The Elements of Life</div>
-            <h1 id="ui-title">Infinite Flow Oracle</h1>
+            <h1 id="ui-title">The Elements of Life: Infinite Flow Oracle</h1>
             <p class="instruction" id="ui-desc">Select your internal foundation</p>
         </div>
+        <button id="btn-guide" onclick="openGuide()">Learn the Magic</button>
     </div>
 
     <div id="bagua-container"></div>
@@ -1236,8 +1233,7 @@
                 currentLevel = 2;
                 renderBagua();
 
-                document.getElementById('ui-level').innerText = "The Elements of Life";
-                document.getElementById('ui-title').innerText = "Infinite Flow Oracle";
+                document.getElementById('ui-title').innerText = "The Elements of Life: Infinite Flow Oracle";
                 document.getElementById('ui-desc').innerText = "Select your external manifestation";
 
                 container.style.transform = 'scale(1) rotate(0deg)';
@@ -1291,16 +1287,12 @@
 
             document.getElementById('level3-view').style.backgroundImage = `radial-gradient(circle at top right, ${upperT.grad[1]}44, transparent 60%), radial-gradient(circle at bottom left, ${lowerT.grad[0]}44, transparent 60%), #050505`;
 
-            document.getElementById('ui-level').style.display = 'none';
             document.getElementById('ui-title').innerText = "Soulful Art: The Gallery";
             document.getElementById('ui-desc').innerText = "A template of consciousness for your rapid transformation";
 
             document.getElementById('ui-layer').classList.add('level3-mode');
             document.getElementById('bagua-container').style.transform = 'scale(2.5) rotate(90deg)';
             document.getElementById('bagua-container').style.opacity = '0';
-
-            document.getElementById('btn-guide').style.opacity = '0';
-            document.getElementById('btn-guide').style.pointerEvents = 'none';
 
             setTimeout(() => {
                 document.getElementById('level3-view').classList.add('active');
@@ -1321,18 +1313,13 @@
             setTimeout(() => {
                 renderBagua();
 
-                document.getElementById('ui-level').style.display = 'block';
-                document.getElementById('ui-level').innerText = "The Elements of Life";
-                document.getElementById('ui-title').innerText = "Infinite Flow Oracle";
+                document.getElementById('ui-title').innerText = "The Elements of Life: Infinite Flow Oracle";
                 document.getElementById('ui-desc').innerText = "Select your internal foundation";
 
                 document.getElementById('ui-layer').classList.remove('level3-mode');
                 const container = document.getElementById('bagua-container');
                 container.style.transform = 'scale(1) rotate(0deg)';
                 container.style.opacity = '1';
-
-                document.getElementById('btn-guide').style.opacity = '1';
-                document.getElementById('btn-guide').style.pointerEvents = 'auto';
             }, 1000);
         }
 
