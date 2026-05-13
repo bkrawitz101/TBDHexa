@@ -33,13 +33,38 @@
         #ui-layer {
             position: relative;
             top: 0;
-            padding-top: 2rem;
-            padding-bottom: 1rem;
+            padding: 2rem 3rem 1rem 3rem;
             text-align: center;
             z-index: 40;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.8s ease, background-color 0.8s ease, box-shadow 0.8s ease, border-color 0.8s ease;
             width: 100%;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: transparent;
+            border-bottom: 1px solid transparent;
+        }
+
+        #ui-layer.level3-mode {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            background-color: var(--bg-color);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .titles-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.8s ease;
+        }
+
+        #ui-layer.level3-mode .titles-wrapper {
+            align-items: flex-end;
+            text-align: right;
         }
 
         h1 {
@@ -263,7 +288,7 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            padding: 1rem;
+            padding: 150px 1rem 1rem 1rem;
             transition: opacity 1.5s ease;
             z-index: 30;
             overflow-y: auto;
@@ -508,30 +533,37 @@
             color: var(--gold-accent);
         }
 
-        .btn-back {
-            position: sticky;
-            top: 140px;
-            background: rgba(5, 5, 5, 0.85);
-            backdrop-filter: blur(8px);
+        .btn-back-header {
+            display: none;
+            background: transparent;
             border: 1px solid var(--gold-accent);
             color: var(--gold-accent);
-            padding: 0.8rem 2.5rem;
+            padding: 0.7rem 1.5rem;
             border-radius: 2px;
             font-family: var(--body-font);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             cursor: pointer;
-            transition: all 0.4s ease;
-            margin-top: 150px;
-            margin-bottom: 2rem;
-            z-index: 50;
-            flex-shrink: 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
         }
-        .btn-back:hover { 
+
+        #ui-layer.level3-mode .btn-back-header {
+            display: flex;
+        }
+
+        .btn-back-header:hover {
             background: var(--gold-accent);
             color: #000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-back-header span {
+            font-size: 1.2rem;
+            line-height: 1;
         }
 
         .card-back::-webkit-scrollbar, .edu-content::-webkit-scrollbar { width: 4px; }
@@ -541,16 +573,14 @@
         @media (max-width: 900px) {
             .content-wrapper { flex-direction: column; gap: 3rem; margin-top: 0;}
             .perspective-container { height: 55vh; width: calc(55vh * 0.767); }
-            #ui-layer { padding-top: 1.5rem; }
+            #ui-layer { padding: 1.5rem 1.5rem 1rem 1.5rem; }
+            #ui-layer.level3-mode { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            #ui-layer.level3-mode .titles-wrapper { align-items: flex-start; text-align: left; }
+            .btn-back-header { margin-top: 0; padding: 0.6rem 1.2rem; font-size: 0.75rem; }
+            #level3-view { padding-top: 180px; }
             h1 { font-size: 2rem; }
             #btn-guide { top: 15px; right: 15px; }
             .edu-content { padding: 2rem; }
-            .btn-back {
-                top: 115px;
-                margin-top: 125px;
-                padding: 0.8rem 1.5rem;
-                font-size: 0.8rem;
-            }
         }
 
     </style>
@@ -584,17 +614,20 @@
     </div>
 
     <div id="ui-layer">
-        <div class="level-indicator" id="ui-level">The Elements of Life</div>
-        <h1 id="ui-title">Infinite Flow Oracle</h1>
-        <p class="instruction" id="ui-desc">Select your internal foundation</p>
+        <button id="btn-back-header" class="btn-back-header" onclick="resetToLevel1()">
+            <span>&#8592;</span> Return to the Source
+        </button>
+        <div class="titles-wrapper" id="ui-titles">
+            <div class="level-indicator" id="ui-level">The Elements of Life</div>
+            <h1 id="ui-title">Infinite Flow Oracle</h1>
+            <p class="instruction" id="ui-desc">Select your internal foundation</p>
+        </div>
     </div>
 
     <div id="bagua-container"></div>
 
     <div id="level3-view">
         <div class="art-overlay"></div>
-
-        <button class="btn-back" onclick="resetToLevel1()">Return to the Source</button>
 
         <div class="content-wrapper">
             <div class="data-panel">
@@ -1258,10 +1291,11 @@
 
             document.getElementById('level3-view').style.backgroundImage = `radial-gradient(circle at top right, ${upperT.grad[1]}44, transparent 60%), radial-gradient(circle at bottom left, ${lowerT.grad[0]}44, transparent 60%), #050505`;
 
-            document.getElementById('ui-level').innerText = "Soulful Art";
-            document.getElementById('ui-title').innerText = "The Gallery";
+            document.getElementById('ui-level').style.display = 'none';
+            document.getElementById('ui-title').innerText = "Soulful Art: The Gallery";
             document.getElementById('ui-desc').innerText = "A template of consciousness for your rapid transformation";
 
+            document.getElementById('ui-layer').classList.add('level3-mode');
             document.getElementById('bagua-container').style.transform = 'scale(2.5) rotate(90deg)';
             document.getElementById('bagua-container').style.opacity = '0';
 
@@ -1287,10 +1321,12 @@
             setTimeout(() => {
                 renderBagua();
 
+                document.getElementById('ui-level').style.display = 'block';
                 document.getElementById('ui-level').innerText = "The Elements of Life";
                 document.getElementById('ui-title').innerText = "Infinite Flow Oracle";
                 document.getElementById('ui-desc').innerText = "Select your internal foundation";
 
+                document.getElementById('ui-layer').classList.remove('level3-mode');
                 const container = document.getElementById('bagua-container');
                 container.style.transform = 'scale(1) rotate(0deg)';
                 container.style.opacity = '1';
