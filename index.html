@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Flow Oracle | Insightful Color</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505; 
+            --text-main: #f8fafc;
+            --gold-accent: #d4af37; 
+            --brand-font: 'Cinzel', serif; 
+            --body-font: 'Montserrat', sans-serif; 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--body-font);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 100%);
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 5%;
+            text-align: center;
+            z-index: 20;
+            transition: opacity 0.8s ease;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: var(--brand-font);
+            font-size: 2.8rem;
+            color: #fff;
+            letter-spacing: 4px;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .level-indicator {
+            font-family: var(--body-font);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--gold-accent);
+            margin-bottom: 0.8rem;
+        }
+
+        p.instruction {
+            font-family: var(--body-font);
+            font-weight: 300;
+            color: #ccc;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+        }
+
+        #btn-guide {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            background: transparent;
+            border: 1px solid var(--gold-accent);
+            color: var(--gold-accent);
+            padding: 0.6rem 1.5rem;
+            border-radius: 2px;
+            font-family: var(--body-font);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+
+        #btn-guide:hover {
+            background: var(--gold-accent);
+            color: #000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        #edu-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            padding: 2rem;
+        }
+
+        #edu-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .edu-content {
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid var(--gold-accent);
+            max-width: 800px;
+            width: 100%;
+            border-radius: 4px;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.5s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #edu-modal.active .edu-content {
+            transform: translateY(0);
+        }
+
+        .edu-title {
+            font-family: var(--brand-font);
+            font-size: 2.2rem;
+            color: var(--gold-accent);
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 3px;
+        }
+
+        .edu-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .edu-section h2 {
+            font-family: var(--brand-font);
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        .edu-section p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #ccc;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .edu-highlight {
+            color: var(--gold-accent);
+            font-weight: 500;
+        }
+
+        .btn-close-modal {
+            display: block;
+            margin: 0 auto;
+            background: var(--gold-accent);
+            border: none;
+            color: #000;
+            padding: 0.8rem 2.5rem;
+            font-family: var(--body-font);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-close-modal:hover {
+            background: #fff;
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
+        }
+
+        #bagua-container {
+            position: absolute;
+            width: 80vmin;
+            height: 80vmin;
+            max-width: 700px;
+            max-height: 700px;
+            transition: transform 1.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1.5s ease;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.9));
+        }
+
+        .wheel { width: 100%; height: 100%; overflow: visible; }
+
+        .wedge {
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 0.5;
+            stroke-linejoin: round;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .wedge-group {
+            transition: transform 0.4s ease;
+            transform-origin: 50px 50px;
+        }
+
+        .wedge-group:hover {
+            transform: scale(1.03);
+            z-index: 10;
+        }
+
+        .wedge-group:hover .wedge.interactive {
+            stroke-width: 1;
+            stroke: var(--gold-accent);
+            filter: brightness(1.2);
+        }
+
+        .symbol {
+            font-size: 6px;
+            font-family: sans-serif;
+            pointer-events: none;
+            transition: fill 0.3s ease;
+            font-weight: 300;
+        }
+
+        .label {
+            font-family: var(--body-font);
+            font-size: 2.2px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            pointer-events: none;
+            transition: fill 0.3s ease;
+        }
+
+        .wedge-group:hover .symbol.interactive,
+        .wedge-group:hover .label.interactive {
+            fill: #fff !important;
+            text-shadow: 0 0 8px rgba(255,255,255,0.8);
+        }
+
+        .center-hole {
+            fill: #000;
+            stroke: rgba(255,255,255,0.2);
+            stroke-width: 0.5;
+            box-shadow: inset 0 0 30px #000;
+        }
+
+        #level3-view {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            transition: opacity 1.5s ease;
+            z-index: 30;
+            overflow-y: auto;
+        }
+
+        #level3-view.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .art-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(5,5,5,0.7) 0%, rgba(5,5,5,0.95) 100%);
+            z-index: -1;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 5rem;
+            align-items: center;
+            justify-content: center;
+            max-width: 1400px;
+            width: 100%;
+            margin-top: 5rem;
+        }
+
+        .data-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 440px;
+            text-align: center;
+        }
+
+        .hexagram-display { margin-bottom: 1.5rem; }
+
+        .hex-stack { 
+            font-size: 4.5rem; line-height: 0.8; color: var(--gold-accent); 
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.4); 
+            display: flex; flex-direction: column; margin-bottom: 1.5rem; 
+        }
+
+        .hex-name { 
+            font-family: var(--brand-font); font-size: 2.8rem; color: #fff; 
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hex-sub { 
+            font-family: var(--body-font);
+            font-weight: 300; color: #aaa; letter-spacing: 4px; 
+            text-transform: uppercase; font-size: 1rem;
+        }
+
+        .magic-meaning {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px dashed rgba(212, 175, 55, 0.4);
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .magic-title {
+            font-family: var(--brand-font);
+            color: var(--gold-accent);
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .magic-story-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            font-weight: 300;
+        }
+
+        .gene-keys-data {
+            width: 100%;
+            padding: 2rem 2rem;
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+        }
+
+        .gk-title { 
+            font-family: var(--brand-font); color: var(--gold-accent); font-size: 1.6rem; 
+            margin-bottom: 1.5rem; letter-spacing: 3px; font-weight: 400;
+        }
+
+        .spectrum { display: flex; flex-direction: column; gap: 1rem; }
+        .spectrum div { 
+            display: flex; flex-direction: column; gap: 0.3rem; 
+        }
+
+        .s-label { font-family: var(--body-font); font-size: 0.75rem; font-weight: 400; color: #777; text-transform: uppercase; letter-spacing: 4px; }
+        .s-shadow { color: #cc6666; font-size: 1.2rem; font-weight: 400; font-family: var(--brand-font);}
+        .s-gift { color: #66b2cc; font-size: 1.2rem; font-weight: 400; font-family: var(--brand-font);}
+        .s-siddhi { color: #b266cc; font-weight: 600; font-size: 1.4rem; font-family: var(--brand-font); letter-spacing: 1px; }
+
+        .card-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .perspective-container {
+            perspective: 2000px;
+            width: calc(65vh * 0.767); 
+            height: 65vh;
+            max-width: 90vw;
+            max-height: calc(90vw / 0.767);
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+            border-radius: 4px; 
+        }
+
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .card-front {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #000;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #050505;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem 2rem;
+            color: #fff;
+            text-align: left;
+            overflow-y: auto;
+        }
+
+        .card-back-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) brightness(0.15) blur(5px);
+            z-index: 0;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-family: var(--brand-font);
+            font-size: 1.6rem;
+            color: var(--gold-accent);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            font-weight: 400;
+        }
+
+        .card-subtitle {
+            font-family: var(--body-font);
+            font-weight: 300;
+            color: #aaa;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 0.8rem;
+        }
+
+        .text-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .text-section h3 {
+            font-family: var(--body-font);
+            font-size: 0.85rem;
+            color: var(--gold-accent);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .text-section p {
+            font-family: var(--brand-font);
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #eee;
+            font-weight: 400;
+            margin-bottom: 0.4rem;
+        }
+
+        .click-hint {
+            margin-top: 10px;
+            width: 100%;
+            text-align: center;
+            font-family: var(--body-font);
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,0.4);
+            transition: color 0.3s ease;
+        }
+
+        .perspective-container:hover + .click-hint {
+            color: var(--gold-accent);
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--gold-accent);
+            color: var(--gold-accent);
+            padding: 1rem 3rem;
+            border-radius: 2px;
+            font-family: var(--body-font);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+            z-index: 40;
+        }
+        .btn-back:hover { 
+            background: var(--gold-accent);
+            color: #000;
+        }
+
+        .card-back::-webkit-scrollbar, .edu-content::-webkit-scrollbar { width: 4px; }
+        .card-back::-webkit-scrollbar-track, .edu-content::-webkit-scrollbar-track { background: transparent; }
+        .card-back::-webkit-scrollbar-thumb, .edu-content::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.5); }
+
+        @media (max-width: 900px) {
+            .content-wrapper { flex-direction: column; gap: 3rem; margin-top: 6rem;}
+            .perspective-container { height: 55vh; width: calc(55vh * 0.767); }
+            #ui-layer { position: relative; top: 0; padding-top: 2rem; }
+            #level3-view { justify-content: flex-start; }
+            h1 { font-size: 2rem; }
+            #btn-guide { top: 15px; right: 15px; }
+            .edu-content { padding: 2rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <button id="btn-guide" onclick="openGuide()">Learn the Magic</button>
+
+    <div id="edu-modal">
+        <div class="edu-content">
+            <h2 class="edu-title">The Magic of the Oracle</h2>
+
+            <div class="edu-section">
+                <h2>1. The I Ching (The Map of Life)</h2>
+                <p>Imagine the universe is a giant kitchen, and it only uses <span class="edu-highlight">8 magical ingredients</span>: Heaven, Earth, Fire, Water, Wind, Thunder, Mountain, and Lake.</p>
+                <p>When you mix two of these ingredients together—like mixing the bright heat of Fire with the cool breeze of Wind—they create a special recipe. In the I Ching, we call this recipe a <span class="edu-highlight">Hexagram</span>.</p>
+                <p>There are 64 possible recipes in total. By choosing two ingredients (your Inner and Outer worlds), the Oracle finds the exact recipe that tells the story of what is happening in your life right now!</p>
+            </div>
+
+            <div class="edu-section">
+                <h2>2. The Gene Keys (Your Inner Superpowers)</h2>
+                <p>If the I Ching is the map of the universe, the Gene Keys are the <span class="edu-highlight">map inside of you</span>. They teach us that everyone has superpowers, but sometimes those powers are hiding.</p>
+                <p>Each of the 64 Hexagrams is also a Gene Key, which is split into three levels of awareness:</p>
+                <p>🌑 <span class="edu-highlight">The Shadow:</span> This is how you feel when you are scared, stuck, or hiding. (Like a seed buried in the dark soil).</p>
+                <p>🌱 <span class="edu-highlight">The Gift:</span> This is your superpower waking up! It happens when you open your heart and face your fears.</p>
+                <p>✨ <span class="edu-highlight">The Siddhi:</span> This is pure magic. It is your absolute highest, brightest self blooming like a beautiful flower.</p>
+            </div>
+
+            <button class="btn-close-modal" onclick="closeGuide()">Begin Journey</button>
+        </div>
+    </div>
+
+    <div id="ui-layer">
+        <div class="level-indicator" id="ui-level">The Elements of Life</div>
+        <h1 id="ui-title">Infinite Flow Oracle</h1>
+        <p class="instruction" id="ui-desc">Select your internal foundation</p>
+    </div>
+
+    <div id="bagua-container"></div>
+
+    <div id="level3-view">
+        <div class="art-overlay"></div>
+
+        <div class="content-wrapper">
+            <div class="data-panel">
+                <div class="hexagram-display">
+                    <div class="hex-stack"><span id="p-upper"></span><span id="p-lower"></span></div>
+                    <div class="hex-name" id="p-name"></div>
+                    <div class="hex-sub" id="p-sub"></div>
+                </div>
+
+                <div class="magic-meaning">
+                    <h3 class="magic-title">The Magic Meaning</h3>
+                    <p class="magic-story-text" id="magic-story"></p>
+                </div>
+
+                <div class="gene-keys-data">
+                    <div class="gk-title" id="p-gk-title"></div>
+                    <div class="spectrum">
+                        <div>
+                            <span class="s-label">Shadow</span>
+                            <span class="s-shadow" id="gk-shadow"></span>
+                        </div>
+                        <div>
+                            <span class="s-label">Gift</span>
+                            <span class="s-gift" id="gk-gift"></span>
+                        </div>
+                        <div>
+                            <span class="s-label">Siddhi</span>
+                            <span class="s-siddhi" id="gk-siddhi"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="perspective-container" onclick="toggleFlip()">
+                    <div class="flip-card" id="art-card">
+                        <div class="card-face card-front">
+                            <img id="card-front-img" src="" alt="Hexagram Art" style="width: 100%; height: 100%; object-fit: cover;" onerror="if(this.src && this.src !== window.location.href) { this.style.display='none'; const err = document.getElementById('card-error'); err.style.display='flex'; err.innerHTML='IMAGE NOT FOUND<br><br>Tried to load:<br><span style=\'font-size:0.75rem; word-break:break-all; color:#fff; margin-top:10px;\'>' + this.src + '</span>'; }" />
+                            <div id="card-error" style="display:none; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; color:#ff6b6b; font-family:var(--body-font); font-size: 0.9rem; text-align:center; padding:2rem;"></div>
+                        </div>
+                        <div class="card-face card-back">
+                            <img class="card-back-bg" id="card-back-img" src="" alt="Background Art" style="width: 100%; height: 100%; object-fit: cover;" />
+                            <div class="card-content" id="card-content-data"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="click-hint">REVEAL THE MESSAGE</div>
+            </div>
+        </div>
+
+        <button class="btn-back" onclick="resetToLevel1()">Return to the Source</button>
+    </div>
+
+    <script>
+        const trigrams = [
+            { name: 'Heaven', symbol: '☰', text: '#e2e8f0', grad: ['#334155', '#475569', '#64748b', '#94a3b8'] }, 
+            { name: 'Lake', symbol: '☱', text: '#ccfbf1', grad: ['#115e59', '#134e4a', '#0f766e', '#14b8a6'] }, 
+            { name: 'Fire', symbol: '☲', text: '#fde047', grad: ['#7f1d1d', '#991b1b', '#b91c1c', '#dc2626'] }, 
+            { name: 'Thunder', symbol: '☳', text: '#fbcfe8', grad: ['#4c1d95', '#581c87', '#6b21a8', '#7e22ce'] }, 
+            { name: 'Wind', symbol: '☴', text: '#d9f99d', grad: ['#14532d', '#166534', '#15803d', '#16a34a'] }, 
+            { name: 'Water', symbol: '☵', text: '#bfdbfe', grad: ['#1e3a8a', '#1e40af', '#1d4ed8', '#2563eb'] }, 
+            { name: 'Mountain', symbol: '☶', text: '#fecdd3', grad: ['#4c0519', '#881337', '#9f1239', '#be123c'] }, 
+            { name: 'Earth', symbol: '☷', text: '#fef3c7', grad: ['#451a03', '#78350f', '#92400e', '#b45309'] }  
+        ];
+
+        const hexMatrix = [
+            [1, 10, 13, 25, 44, 6, 33, 12],  
+            [43, 58, 49, 17, 28, 47, 31, 45], 
+            [14, 38, 30, 21, 50, 64, 56, 35], 
+            [34, 54, 55, 51, 32, 40, 62, 16], 
+            [9, 61, 37, 42, 57, 59, 53, 20],  
+            [5, 60, 63, 3, 48, 29, 39, 8],    
+            [26, 41, 22, 27, 18, 4, 52, 23],  
+            [11, 19, 36, 24, 46, 7, 15, 2]    
+        ];
+
+        // INJECTED FROM PYTHON
+        const geneKeysDB = {
+    1: { s: "Entropy", g: "Freshness", si: "Beauty" },
+    2: { s: "Dislocation", g: "Orientation", si: "Unity" },
+    3: { s: "Chaos", g: "Innovation", si: "Innocence" },
+    4: { s: "Intolerance", g: "Understanding", si: "Forgiveness" },
+    5: { s: "Impatience", g: "Patience", si: "Timelessness" },
+    6: { s: "Conflict", g: "Diplomacy", si: "Peace" },
+    7: { s: "Division", g: "Guidance", si: "Virtue" },
+    8: { s: "Mediocrity", g: "Style", si: "Exquisiteness" },
+    9: { s: "Inertia", g: "Determination", si: "Invincibility" },
+    10: { s: "Self-Obsession", g: "Naturalness", si: "Being" },
+    11: { s: "Obscurity", g: "Idealism", si: "Light" },
+    12: { s: "Vanity", g: "Discrimination", si: "Purity" },
+    13: { s: "Discord", g: "Discernment", si: "Empathy" },
+    14: { s: "Compromise", g: "Competence", si: "Bounteousness" },
+    15: { s: "Dullness", g: "Magnetism", si: "Florescence" },
+    16: { s: "Indifference", g: "Versatility", si: "Mastery" },
+    17: { s: "Opinion", g: "Far-sightedness", si: "Omniscience" },
+    18: { s: "Judgment", g: "Integrity", si: "Perfection" },
+    19: { s: "Co-dependence", g: "Sensitivity", si: "Sacrifice" },
+    20: { s: "Superficiality", g: "Self-Assurance", si: "Presence" },
+    21: { s: "Control", g: "Authority", si: "Valor" },
+    22: { s: "Dishonor", g: "Graciousness", si: "Grace" },
+    23: { s: "Complexity", g: "Simplicity", si: "Quintessence" },
+    24: { s: "Addiction", g: "Invention", si: "Silence" },
+    25: { s: "Constriction", g: "Acceptance", si: "Universal Love" },
+    26: { s: "Pride", g: "Artfulness", si: "Invisibility" },
+    27: { s: "Selfishness", g: "Altruism", si: "Selflessness" },
+    28: { s: "Purposelessness", g: "Totality", si: "Immortality" },
+    29: { s: "Half-heartedness", g: "Commitment", si: "Devotion" },
+    30: { s: "Desire", g: "Lightness", si: "Rapture" },
+    31: { s: "Arrogance", g: "Leadership", si: "Humility" },
+    32: { s: "Failure", g: "Preservation", si: "Veneration" },
+    33: { s: "Forgetting", g: "Mindfulness", si: "Revelation" },
+    34: { s: "Force", g: "Majesty", si: "Majesty" },
+    35: { s: "Hunger", g: "Adventure", si: "Boundlessness" },
+    36: { s: "Turbulence", g: "Humanity", si: "Compassion" },
+    37: { s: "Weakness", g: "Equality", si: "Tenderness" },
+    38: { s: "Struggle", g: "Perseverance", si: "Honor" },
+    39: { s: "Provocation", g: "Dynamism", si: "Liberation" },
+    40: { s: "Exhaustion", g: "Resolve", si: "Divine Will" },
+    41: { s: "Fantasy", g: "Anticipation", si: "Emanation" },
+    42: { s: "Expectation", g: "Detachment", si: "Celebration" },
+    43: { s: "Deafness", g: "Insight", si: "Epiphany" },
+    44: { s: "Interference", g: "Teamwork", si: "Synarchy" },
+    45: { s: "Dominance", g: "Synergy", si: "Communion" },
+    46: { s: "Seriousness", g: "Delight", si: "Ecstasy" },
+    47: { s: "Oppression", g: "Transmutation", si: "Transfiguration" },
+    48: { s: "Inadequacy", g: "Resourcefulness", si: "Wisdom" },
+    49: { s: "Reaction", g: "Revolution", si: "Rebirth" },
+    50: { s: "Fear", g: "Creativity", si: "Transcendence" },
+    51: { s: "Agitation", g: "Initiative", si: "Awakening" },
+    52: { s: "Stress", g: "Restraint", si: "Stillness" },
+    53: { s: "Immaturity", g: "Expansion", si: "Superabundance" },
+    54: { s: "Greed", g: "Aspiration", si: "Ascension" },
+    55: { s: "Victimization", g: "Freedom", si: "Freedom" },
+    56: { s: "Distraction", g: "Enrichment", si: "Intoxication" },
+    57: { s: "Unease", g: "Intuition", si: "Clarity" },
+    58: { s: "Dissatisfaction", g: "Vitality", si: "Bliss" },
+    59: { s: "Dishonesty", g: "Intimacy", si: "Transparency" },
+    60: { s: "Limitation", g: "Realism", si: "Justice" },
+    61: { s: "Psychosis", g: "Inspiration", si: "Sanctity" },
+    62: { s: "Intellect", g: "Precision", si: "Impeccability" },
+    63: { s: "Doubt", g: "Inquiry", si: "Truth" },
+    64: { s: "Confusion", g: "Imagination", si: "Illumination" },
+};
+
+        const hexagramStories = {
+    1: "Imagine a burst of bright, creative energy creating stars. When you feel caught in the Shadow of Entropy, remember you have the inner superpower of Freshness waiting to wake up. By opening your heart, you will bloom into the pure magic of Beauty!",
+    2: "Imagine the soft, rich earth holding a tiny seed safely. When you feel caught in the Shadow of Dislocation, remember you have the inner superpower of Orientation waiting to wake up. By opening your heart, you will bloom into the pure magic of Unity!",
+    3: "Imagine a messy playroom waiting to be turned into a fun new game. When you feel caught in the Shadow of Chaos, remember you have the inner superpower of Innovation waiting to wake up. By opening your heart, you will bloom into the pure magic of Innocence!",
+    4: "Imagine a stubborn mountain learning to let the river flow around it. When you feel caught in the Shadow of Intolerance, remember you have the inner superpower of Understanding waiting to wake up. By opening your heart, you will bloom into the pure magic of Forgiveness!",
+    5: "Imagine waiting for a caterpillar to slowly turn into a beautiful butterfly. When you feel caught in the Shadow of Impatience, remember you have the inner superpower of Patience waiting to wake up. By opening your heart, you will bloom into the pure magic of Timelessness!",
+    6: "Imagine two clouds bumping together until they learn to share the sky softly. When you feel caught in the Shadow of Conflict, remember you have the inner superpower of Diplomacy waiting to wake up. By opening your heart, you will bloom into the pure magic of Peace!",
+    7: "Imagine an army of ants learning to march together as one happy family. When you feel caught in the Shadow of Division, remember you have the inner superpower of Guidance waiting to wake up. By opening your heart, you will bloom into the pure magic of Virtue!",
+    8: "Imagine a plain rock that hides a sparkling, colorful crystal deep inside. When you feel caught in the Shadow of Mediocrity, remember you have the inner superpower of Style waiting to wake up. By opening your heart, you will bloom into the pure magic of Exquisiteness!",
+    9: "Imagine a tiny snowball rolling down a hill until it becomes a giant avalanche. When you feel caught in the Shadow of Inertia, remember you have the inner superpower of Determination waiting to wake up. By opening your heart, you will bloom into the pure magic of Invincibility!",
+    10: "Imagine a little flower that doesn't try to be a tree, it just loves being a flower. When you feel caught in the Shadow of Self-Obsession, remember you have the inner superpower of Naturalness waiting to wake up. By opening your heart, you will bloom into the pure magic of Being!",
+    11: "Imagine a dark room that completely lights up when you strike a single magical match. When you feel caught in the Shadow of Obscurity, remember you have the inner superpower of Idealism waiting to wake up. By opening your heart, you will bloom into the pure magic of Light!",
+    12: "Imagine a shiny mirror that learns to show the truth instead of just a pretty face. When you feel caught in the Shadow of Vanity, remember you have the inner superpower of Discrimination waiting to wake up. By opening your heart, you will bloom into the pure magic of Purity!",
+    13: "Imagine a choir singing out of tune until they listen and sing a beautiful song together. When you feel caught in the Shadow of Discord, remember you have the inner superpower of Discernment waiting to wake up. By opening your heart, you will bloom into the pure magic of Empathy!",
+    14: "Imagine a little wagon that turns into a magical train carrying treasures for everyone. When you feel caught in the Shadow of Compromise, remember you have the inner superpower of Competence waiting to wake up. By opening your heart, you will bloom into the pure magic of Bounteousness!",
+    15: "Imagine a quiet, sleepy forest that suddenly blooms with glowing, magnetic fireflies. When you feel caught in the Shadow of Dullness, remember you have the inner superpower of Magnetism waiting to wake up. By opening your heart, you will bloom into the pure magic of Florescence!",
+    16: "Imagine a lazy breeze that wakes up and learns to dance perfectly with the colorful leaves. When you feel caught in the Shadow of Indifference, remember you have the inner superpower of Versatility waiting to wake up. By opening your heart, you will bloom into the pure magic of Mastery!",
+    17: "Imagine looking through a tiny keyhole, and then opening the door to see the whole wide world. When you feel caught in the Shadow of Opinion, remember you have the inner superpower of Far-sightedness waiting to wake up. By opening your heart, you will bloom into the pure magic of Omniscience!",
+    18: "Imagine fixing a broken toy so wonderfully that it becomes even better than when it was new. When you feel caught in the Shadow of Judgment, remember you have the inner superpower of Integrity waiting to wake up. By opening your heart, you will bloom into the pure magic of Perfection!",
+    19: "Imagine two little birds learning they can fly even higher when they give each other space. When you feel caught in the Shadow of Co-dependence, remember you have the inner superpower of Sensitivity waiting to wake up. By opening your heart, you will bloom into the pure magic of Sacrifice!",
+    20: "Imagine a shallow little puddle transforming into a deep, calm, and very wise ocean. When you feel caught in the Shadow of Superficiality, remember you have the inner superpower of Self-Assurance waiting to wake up. By opening your heart, you will bloom into the pure magic of Presence!",
+    21: "Imagine a tight fist opening up to become a brave, gentle hand offering a gift. When you feel caught in the Shadow of Control, remember you have the inner superpower of Authority waiting to wake up. By opening your heart, you will bloom into the pure magic of Valor!",
+    22: "Imagine a stormy, angry rain cloud turning into a soft, graceful, and beautiful rainbow. When you feel caught in the Shadow of Dishonor, remember you have the inner superpower of Graciousness waiting to wake up. By opening your heart, you will bloom into the pure magic of Grace!",
+    23: "Imagine a giant, confusing puzzle suddenly snapping into one simple, perfect picture. When you feel caught in the Shadow of Complexity, remember you have the inner superpower of Simplicity waiting to wake up. By opening your heart, you will bloom into the pure magic of Quintessence!",
+    24: "Imagine running on a spinning hamster wheel, then stepping off to build a magical rocket ship instead. When you feel caught in the Shadow of Addiction, remember you have the inner superpower of Invention waiting to wake up. By opening your heart, you will bloom into the pure magic of Silence!",
+    25: "Imagine a tight cocoon breaking open to let a beautiful butterfly spread its wings with love. When you feel caught in the Shadow of Constriction, remember you have the inner superpower of Acceptance waiting to wake up. By opening your heart, you will bloom into the pure magic of Universal Love!",
+    26: "Imagine a loud peacock learning that the most magical magic is the kind you feel in your heart, not see. When you feel caught in the Shadow of Pride, remember you have the inner superpower of Artfulness waiting to wake up. By opening your heart, you will bloom into the pure magic of Invisibility!",
+    27: "Imagine a hungry bear learning that sharing its sweet honey makes its own tummy feel even fuller. When you feel caught in the Shadow of Selfishness, remember you have the inner superpower of Altruism waiting to wake up. By opening your heart, you will bloom into the pure magic of Selflessness!",
+    28: "Imagine a wandering leaf finding its perfect place in the giant, endless tree of life. When you feel caught in the Shadow of Purposelessness, remember you have the inner superpower of Totality waiting to wake up. By opening your heart, you will bloom into the pure magic of Immortality!",
+    29: "Imagine a small drop of water promising to join the big river and flow all the way to the ocean. When you feel caught in the Shadow of Half-heartedness, remember you have the inner superpower of Commitment waiting to wake up. By opening your heart, you will bloom into the pure magic of Devotion!",
+    30: "Imagine a heavy, hungry flame turning into a floating, giggling spark of pure, bright joy. When you feel caught in the Shadow of Desire, remember you have the inner superpower of Lightness waiting to wake up. By opening your heart, you will bloom into the pure magic of Rapture!",
+    31: "Imagine a bossy lion learning to gently guide the whole forest with a very humble heart. When you feel caught in the Shadow of Arrogance, remember you have the inner superpower of Leadership waiting to wake up. By opening your heart, you will bloom into the pure magic of Humility!",
+    32: "Imagine a falling tree branch turning into rich soil that protects the garden for tomorrow's flowers. When you feel caught in the Shadow of Failure, remember you have the inner superpower of Preservation waiting to wake up. By opening your heart, you will bloom into the pure magic of Veneration!",
+    33: "Imagine waking up from a foggy dream and suddenly remembering a wonderful, magical secret. When you feel caught in the Shadow of Forgetting, remember you have the inner superpower of Mindfulness waiting to wake up. By opening your heart, you will bloom into the pure magic of Revelation!",
+    34: "Imagine a wild, crashing wave learning to move with the elegant, steady power of the deep tide. When you feel caught in the Shadow of Force, remember you have the inner superpower of Majesty waiting to wake up. By opening your heart, you will bloom into the pure magic of Majesty!",
+    35: "Imagine a tiny caterpillar stepping out of its garden to explore the boundless, endless sky. When you feel caught in the Shadow of Hunger, remember you have the inner superpower of Adventure waiting to wake up. By opening your heart, you will bloom into the pure magic of Boundlessness!",
+    36: "Imagine a bumpy, scary airplane ride turning into a gentle glide that softly hugs the clouds. When you feel caught in the Shadow of Turbulence, remember you have the inner superpower of Humanity waiting to wake up. By opening your heart, you will bloom into the pure magic of Compassion!",
+    37: "Imagine a wobbly little twig joining a bundle of sticks to become a strong, tender family. When you feel caught in the Shadow of Weakness, remember you have the inner superpower of Equality waiting to wake up. By opening your heart, you will bloom into the pure magic of Tenderness!",
+    38: "Imagine climbing a super steep mountain and finally reaching the top feeling like a true hero. When you feel caught in the Shadow of Struggle, remember you have the inner superpower of Perseverance waiting to wake up. By opening your heart, you will bloom into the pure magic of Honor!",
+    39: "Imagine a poking, annoying thorn turning into a shiny key that unlocks a giant treasure chest. When you feel caught in the Shadow of Provocation, remember you have the inner superpower of Dynamism waiting to wake up. By opening your heart, you will bloom into the pure magic of Liberation!",
+    40: "Imagine a sleepy, tired puppy suddenly finding a magical burst of energy to finish the big race. When you feel caught in the Shadow of Exhaustion, remember you have the inner superpower of Resolve waiting to wake up. By opening your heart, you will bloom into the pure magic of Divine Will!",
+    41: "Imagine daydreaming about a magical kingdom and then actually building it with your own hands. When you feel caught in the Shadow of Fantasy, remember you have the inner superpower of Anticipation waiting to wake up. By opening your heart, you will bloom into the pure magic of Emanation!",
+    42: "Imagine waiting grumpily for a gift, and then realizing the whole day is already a fun party. When you feel caught in the Shadow of Expectation, remember you have the inner superpower of Detachment waiting to wake up. By opening your heart, you will bloom into the pure magic of Celebration!",
+    43: "Imagine wearing tight earmuffs, and then taking them off to hear the universe whispering a brilliant idea. When you feel caught in the Shadow of Deafness, remember you have the inner superpower of Insight waiting to wake up. By opening your heart, you will bloom into the pure magic of Epiphany!",
+    44: "Imagine a bunch of messy puzzle pieces finally coming together to work as one beautiful team. When you feel caught in the Shadow of Interference, remember you have the inner superpower of Teamwork waiting to wake up. By opening your heart, you will bloom into the pure magic of Synarchy!",
+    45: "Imagine a bossy king stepping off his tall throne to dance in a circle with all of his friends. When you feel caught in the Shadow of Dominance, remember you have the inner superpower of Synergy waiting to wake up. By opening your heart, you will bloom into the pure magic of Communion!",
+    46: "Imagine a grumpy, gray cloud suddenly bursting into a giggling shower of bright, colorful confetti. When you feel caught in the Shadow of Seriousness, remember you have the inner superpower of Delight waiting to wake up. By opening your heart, you will bloom into the pure magic of Ecstasy!",
+    47: "Imagine feeling squished in a tiny dark box, then turning the box into a glowing, flying spaceship. When you feel caught in the Shadow of Oppression, remember you have the inner superpower of Transmutation waiting to wake up. By opening your heart, you will bloom into the pure magic of Transfiguration!",
+    48: "Imagine feeling like you don't have enough crayons, and then magically inventing a whole new color. When you feel caught in the Shadow of Inadequacy, remember you have the inner superpower of Resourcefulness waiting to wake up. By opening your heart, you will bloom into the pure magic of Wisdom!",
+    49: "Imagine yelling out loud when you are startled, but then taking a deep breath and turning it into a happy song. When you feel caught in the Shadow of Reaction, remember you have the inner superpower of Revolution waiting to wake up. By opening your heart, you will bloom into the pure magic of Rebirth!",
+    50: "Imagine a big magical cooking pot sitting over a warm, crackling fire. This hexagram is all about The Cauldron! It means you are mixing all your good feelings and bright ideas together to cook up something wonderful to share with the world.",
+    51: "Imagine a jumpy, nervous frog deciding to take a giant, brave leap into a brand new pond. When you feel caught in the Shadow of Agitation, remember you have the inner superpower of Initiative waiting to wake up. By opening your heart, you will bloom into the pure magic of Awakening!",
+    52: "Imagine a buzzing, dizzy bee finally sitting quietly on a soft lotus petal to enjoy perfect peace. When you feel caught in the Shadow of Stress, remember you have the inner superpower of Restraint waiting to wake up. By opening your heart, you will bloom into the pure magic of Stillness!",
+    53: "Imagine a little green sprout learning to grow into a massive tree dropping thousands of sweet apples. When you feel caught in the Shadow of Immaturity, remember you have the inner superpower of Expansion waiting to wake up. By opening your heart, you will bloom into the pure magic of Superabundance!",
+    54: "Imagine trying to grab all the toys at once, but then looking up and deciding to reach for the bright stars instead. When you feel caught in the Shadow of Greed, remember you have the inner superpower of Aspiration waiting to wake up. By opening your heart, you will bloom into the pure magic of Ascension!",
+    55: "Imagine a little bird thinking it's locked in a cage, only to realize the door was always wide open. When you feel caught in the Shadow of Victimization, remember you have the inner superpower of Freedom waiting to wake up. By opening your heart, you will bloom into the pure magic of Freedom!",
+    56: "Imagine looking away from a boring page and finding a deeply magical, fascinating new world right outside. When you feel caught in the Shadow of Distraction, remember you have the inner superpower of Enrichment waiting to wake up. By opening your heart, you will bloom into the pure magic of Intoxication!",
+    57: "Imagine a wobbly, nervous compass needle finally pointing straight true north with total, perfect clarity. When you feel caught in the Shadow of Unease, remember you have the inner superpower of Intuition waiting to wake up. By opening your heart, you will bloom into the pure magic of Clarity!",
+    58: "Imagine feeling grumpy about a plain sandwich, and then turning it into a joyous, magical feast for a king. When you feel caught in the Shadow of Dissatisfaction, remember you have the inner superpower of Vitality waiting to wake up. By opening your heart, you will bloom into the pure magic of Bliss!",
+    59: "Imagine hiding behind a scary mask, and then bravely taking it off to show your true, friendly face. When you feel caught in the Shadow of Dishonesty, remember you have the inner superpower of Intimacy waiting to wake up. By opening your heart, you will bloom into the pure magic of Transparency!",
+    60: "Imagine feeling stuck inside a tiny fence, and then using the fence posts to build a sturdy ladder to climb over. When you feel caught in the Shadow of Limitation, remember you have the inner superpower of Realism waiting to wake up. By opening your heart, you will bloom into the pure magic of Justice!",
+    61: "Imagine a messy, noisy brain suddenly catching a tiny, quiet whisper of pure, holy, beautiful magic. When you feel caught in the Shadow of Psychosis, remember you have the inner superpower of Inspiration waiting to wake up. By opening your heart, you will bloom into the pure magic of Sanctity!",
+    62: "Imagine a messy pile of blocks magically sorting themselves into a perfectly built, exact castle. When you feel caught in the Shadow of Intellect, remember you have the inner superpower of Precision waiting to wake up. By opening your heart, you will bloom into the pure magic of Impeccability!",
+    63: "Imagine a confused little owl asking lots and lots of questions until it finds the glowing, golden truth. When you feel caught in the Shadow of Doubt, remember you have the inner superpower of Inquiry waiting to wake up. By opening your heart, you will bloom into the pure magic of Truth!",
+    64: "Like a little fox trying to cross a freezing river, you are almost at the finish line! But you have to take careful, mindful steps, because the journey isn't quite over yet. Trust yourself, but don't rush!",
+};
+
+
+        function getGeneKeyData(hexNum) {
+            return geneKeysDB[hexNum] || { s: "Shadow", g: "Gift", si: "Siddhi" };
+        }
+
+        function getHexagramStory(hexNum, upperName, lowerName) {
+            if (hexagramStories[hexNum]) return hexagramStories[hexNum];
+            return `When the bright magic of ${upperName} meets the deep magic of ${lowerName}, a brand new adventure begins!`;
+        }
+
+        const cardDataDB = {
+            4: {
+                title: "Monkey - Fear of Ignorance",
+                image: "images/04_Monkeyhex.jpeg",
+                sections: [
+                    {
+                        header: "I am called Monkey Mind because",
+                        lines: [
+                            "I am lost in mental jungle",
+                            "I am scared of being inadequate",
+                            "I do not understand how to solve problems. It is hard for me to deal with information overload. I do not have time to sort through all the choices."
+                        ]
+                    },
+                    {
+                        header: "I often feel",
+                        lines: ["ignorant, unaware, stupid, clueless, helpless"]
+                    },
+                    {
+                        header: "I want to be",
+                        lines: ["smart, helpful, knowing, insightful, open minded"]
+                    },
+                    {
+                        header: "I succeed when",
+                        lines: [
+                            "I trust that every monkey knows what tree to climb",
+                            "I organize information into actionable steps",
+                            "I find unique formulas aligned with my mind and heart",
+                            "I create and offer clear frameworks for advancement"
+                        ]
+                    }
+                ]
+            },
+            6: {
+                title: "Porcupine - Fear of Conflict",
+                image: "images/06_Porcupinehex.jpeg",
+                sections: [
+                    {
+                        header: "I am called Spike Pussyfoot because",
+                        lines: [
+                            "I avoid friction at any cost",
+                            "I am scared of expressing my emotions",
+                            "I feel dis-empowered in turbulent encounters. I feel the need to defend myself. When I am overwhelmed, I run away from conflict."
+                        ]
+                    },
+                    {
+                        header: "I often feel",
+                        lines: ["reserved, defensive, insufficient, bound, conflicted"]
+                    },
+                    {
+                        header: "I want to be",
+                        lines: ["sensible, balanced, engaged, empowered, expressive"]
+                    },
+                    {
+                        header: "I succeed when",
+                        lines: [
+                            "I transcend the porcupine dilemma and allow intimacy",
+                            "I face challenges with focus and impartiality",
+                            "I share my emotions without raising my spikes",
+                            "I see conflict as a call for solutions through diplomacy"
+                        ]
+                    }
+                ]
+            },
+            7: {
+                title: "Caterpillar - Fear of Crisis",
+                image: "images/07_Caterpillar.jpeg",
+                sections: [
+                    {
+                        header: "I am called Omit Left Out because",
+                        lines: [
+                            "I never feel valued",
+                            "I am scared of being overlooked",
+                            "I am on a mission to move everyone forward. They cannot find a better guide to navigate through complexities of life. They lose their way without me."
+                        ]
+                    },
+                    {
+                        header: "I often feel",
+                        lines: ["repressed, discarded, dominated, dictatorial, intense"]
+                    },
+                    {
+                        header: "I want to be",
+                        lines: ["guiding, directing, mentoring, virtuous, followed"]
+                    },
+                    {
+                        header: "I succeed when",
+                        lines: [
+                            "I release my need to guide without being asked",
+                            "I trust the crisis will awaken the butterfly within",
+                            "I attune to my followers’ needs and uplift their values",
+                            "I offer my guidance in the spirit of selfless service"
+                        ]
+                    }
+                ]
+            },
+            29: {
+                title: "Python - Fear of Uselessness",
+                image: "images/29_Pythonhex.jpeg",
+                sections: [
+                    {
+                        header: "I am called Wishy Washy because",
+                        lines: [
+                            "I cannot choose amidst multitude of priorities",
+                            "I am scared of commitment",
+                            "I feel useless when I am not engaged. Even though overcommitting is exhausting, I try not to miss any opportunities. I will promise anything to feel useful."
+                        ]
+                    },
+                    {
+                        header: "I often feel",
+                        lines: ["half-hearted, burdened, unreliable, compulsive, failing"]
+                    },
+                    {
+                        header: "I want to be",
+                        lines: ["loyal, dutiful, responsible, steady, reliable"]
+                    },
+                    {
+                        header: "I succeed when",
+                        lines: [
+                            "I invest time in doing what I love",
+                            "I nourish myself until I feel like a well-fed python",
+                            "I allow others to fulfill their responsibilities",
+                            "I let go of my urge to save the day"
+                        ]
+                    }
+                ]
+            },
+            40: {
+                title: "Wasp - Fear of Futility",
+                image: "images/40_Wasphex.jpeg",
+                sections: [
+                    {
+                        header: "I am called Boundary Bound because",
+                        lines: [
+                            "I need to belong",
+                            "I am scared of being exhausted",
+                            "I cannot trust my family. I do not know my right place. I need to push boundaries to get what I want. I feel I must stand alone in overcoming hardships."
+                        ]
+                    },
+                    {
+                        header: "I often feel",
+                        lines: ["disrespected, restricted, spent, cut off, ruffled"]
+                    },
+                    {
+                        header: "I want to be",
+                        lines: ["purposeful, resolute, connected, steadfast, included"]
+                    },
+                    {
+                        header: "I succeed when",
+                        lines: [
+                            "I might sting in defiance, but I never sting with poison",
+                            "I re-evaluate and elevate my family values",
+                            "I engage in mutually supportive relationships",
+                            "I refrain from interfering and trust the Divine Will"
+                        ]
+                    }
+                ]
+            },
+            47: {
+                title: "Donkey - Fear of Depression",
+                image: "images/47_Donkeyhex.jpeg",
+                sections: [
+                    {
+                        header: "I am called Hope Doomed because",
+                        lines: [
+                            "I get mentally exhausted",
+                            "I am scared of losing my footing",
+                            "I am trying to figure things out. I feel oppressed and hopeless. I make negative impact on others by sharing ideas out of place."
+                        ]
+                    },
+                    {
+                        header: "I often feel",
+                        lines: ["bleak, despondent, futureless, futile, resigned"]
+                    },
+                    {
+                        header: "I want to be",
+                        lines: ["energized, relevant, impactful, inspiring, wise"]
+                    },
+                    {
+                        header: "I succeed when",
+                        lines: [
+                            "I limit my natural overthinking and stubbornness",
+                            "I am brave enough to try new things",
+                            "I realize I have nothing to lose and everything to gain",
+                            "I trust the wisdom revealed by experience"
+                        ]
+                    }
+                ]
+            },
+            59: {
+                title: "Snail - Fear of Vulnerability",
+                image: "images/59_Snailhex.jpeg",
+                sections: [
+                    {
+                        header: "I am called Fragility Elude because",
+                        lines: [
+                            "I avoid genuine intimacy",
+                            "I am scared of being excluded",
+                            "I throw myself into intimate connections. I feel pressure to engage at an uncomfortable level. I pretend to be anything you need me to be."
+                        ]
+                    },
+                    {
+                        header: "I often feel",
+                        lines: ["undesired, dispersed, invaded, exposed, hypocritical"]
+                    },
+                    {
+                        header: "I want to be",
+                        lines: ["involved, open, sensual, transparent, intimate"]
+                    },
+                    {
+                        header: "I succeed when",
+                        lines: [
+                            "I let go of my protective shell to connect intimately",
+                            "I avoid making snail trails leading to slippery slopes",
+                            "I create and maintain appropriate boundaries",
+                            "I am open to flow of life with all my senses"
+                        ]
+                    }
+                ]
+            },
+            64: {
+                title: "Lobster - Fear of Change",
+                image: "images/64_Lobsterhex.jpeg", 
+                sections: [
+                    {
+                        header: "I am called Echo Clueless because",
+                        lines: [
+                            "I do not feel safe exposed to light",
+                            "I am scared of illuminating my path",
+                            "I limit possibilities with rigid constructs of my mind. I am misled by abundance of choices. I create excuses to protect myself from meaningful action."
+                        ]
+                    },
+                    {
+                        header: "I often feel",
+                        lines: ["misread, confused, obscured, perplexed, defensive"]
+                    },
+                    {
+                        header: "I want to be",
+                        lines: ["imaginative, energized, eager, open-minded, bright"]
+                    },
+                    {
+                        header: "I succeed when",
+                        lines: [
+                            "I venture out of my lobster cave to find certainty",
+                            "I follow my creative impulses",
+                            "I bring troubling issues to light",
+                            "I act despite limitations of my logical mind"
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const localImages = {
+            4: "images/04_Monkeyhex.jpeg",
+            6: "images/06_Porcupinehex.jpeg",
+            7: "images/07_Caterpillar.jpeg",
+            29: "images/29_Pythonhex.jpeg",
+            40: "images/40_Wasphex.jpeg",
+            47: "images/47_Donkeyhex.jpeg",
+            59: "images/59_Snailhex.jpeg",
+            64: "images/64_Lobsterhex.jpeg"
+        };
+
+        function getCardData(hexNum) {
+            if (cardDataDB[hexNum]) return cardDataDB[hexNum];
+            return {
+                title: `Archetype ${hexNum}`,
+                image: localImages[hexNum] || "https://images.unsplash.com/photo-1604871000636-074fa5117945?ixlib=rb-4.0.3&auto=format&fit=crop&w=791&q=80",
+                sections: [
+                    { header: "I am called...", lines: ["A wanderer of the unknown."] },
+                    { header: "I often feel", lines: ["uncertain but curious"] },
+                    { header: "I want to be", lines: ["grounded, focused, clear"] },
+                    { header: "I succeed when", lines: ["I trust the process", "I embrace the frequency of Hexagram " + hexNum] }
+                ]
+            };
+        }
+
+        function getWedgeData(index, rIn, rOut) {
+            const deg1 = index * 45 - 22.5;
+            const deg2 = index * 45 + 22.5;
+            const rad1 = deg1 * Math.PI / 180;
+            const rad2 = deg2 * Math.PI / 180;
+            const cos22_5 = Math.cos(22.5 * Math.PI / 180);
+            const cornerIn = rIn / cos22_5;
+            const cornerOut = rOut / cos22_5;
+
+            const p1x = 50 + cornerOut * Math.sin(rad1);
+            const p1y = 50 - cornerOut * Math.cos(rad1);
+            const p2x = 50 + cornerOut * Math.sin(rad2);
+            const p2y = 50 - cornerOut * Math.cos(rad2);
+            const p3x = 50 + cornerIn * Math.sin(rad2);
+            const p3y = 50 - cornerIn * Math.cos(rad2);
+            const p4x = 50 + cornerIn * Math.sin(rad1);
+            const p4y = 50 - cornerIn * Math.cos(rad1);
+
+            const midR = (rIn + rOut) / 2;
+            const textX = 50 + midR * Math.sin(index * 45 * Math.PI / 180);
+            const textY = 50 - midR * Math.cos(index * 45 * Math.PI / 180);
+
+            return {
+                points: `${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y} ${p4x},${p4y}`,
+                textX: textX, textY: textY, rotation: index * 45
+            };
+        }
+
+        let currentLevel = 1; 
+        let selectedLowerIdx = null;
+
+        function renderBagua() {
+            let svg = `<svg viewBox="0 0 100 100" class="wheel"><defs>`;
+
+            trigrams.forEach((t, i) => {
+                svg += `
+                <linearGradient id="grad-${i}" x1="0%" y1="100%" x2="50%" y2="0%">
+                    <stop offset="0%" stop-color="${t.grad[0]}" />
+                    <stop offset="33%" stop-color="${t.grad[1]}" />
+                    <stop offset="66%" stop-color="${t.grad[2]}" />
+                    <stop offset="100%" stop-color="${t.grad[3]}" />
+                </linearGradient>
+                <linearGradient id="grad-dim-${i}" x1="0%" y1="100%" x2="50%" y2="0%">
+                    <stop offset="0%" stop-color="${t.grad[0]}" />
+                    <stop offset="100%" stop-color="${t.grad[1]}" />
+                </linearGradient>`;
+            });
+            svg += `</defs>`;
+
+            if (currentLevel === 1) {
+                trigrams.forEach((t, i) => {
+                    const wedge = getWedgeData(i, 15, 48); 
+                    svg += `
+                    <g class="wedge-group" onclick="selectLower(${i})">
+                        <polygon points="${wedge.points}" class="wedge interactive" fill="url(#grad-${i})" opacity="0.9" />
+                        <text class="symbol interactive" x="${wedge.textX}" y="${wedge.textY - 2}" fill="${t.text}" 
+                              text-anchor="middle" alignment-baseline="middle" transform="rotate(${wedge.rotation}, ${wedge.textX}, ${wedge.textY})">${t.symbol}</text>
+                        <text class="label interactive" x="${wedge.textX}" y="${wedge.textY + 3.5}" fill="${t.text}" 
+                              text-anchor="middle" alignment-baseline="middle" transform="rotate(${wedge.rotation}, ${wedge.textX}, ${wedge.textY})">${t.name.toUpperCase()}</text>
+                    </g>`;
+                });
+            } else if (currentLevel === 2) {
+                trigrams.forEach((t, i) => {
+                    const wedge = getWedgeData(i, 12, 26);
+                    const isSelected = (i === selectedLowerIdx);
+                    const fill = isSelected ? `url(#grad-${i})` : `url(#grad-dim-${i})`;
+                    const opacity = isSelected ? "1" : "0.3";
+                    const textColor = isSelected ? t.text : 'rgba(255,255,255,0.3)';
+                    const stroke = isSelected ? 'var(--gold-accent)' : 'none';
+                    svg += `
+                    <g>
+                        <polygon points="${wedge.points}" class="wedge" fill="${fill}" opacity="${opacity}" style="stroke: ${stroke}; stroke-width: 0.5;" />
+                        <text class="symbol" x="${wedge.textX}" y="${wedge.textY}" fill="${textColor}" 
+                              text-anchor="middle" alignment-baseline="middle" transform="rotate(${wedge.rotation}, ${wedge.textX}, ${wedge.textY})">${t.symbol}</text>
+                    </g>`;
+                });
+
+                trigrams.forEach((t, i) => {
+                    const wedge = getWedgeData(i, 29, 48);
+                    svg += `
+                    <g class="wedge-group" onclick="selectUpper(${i})">
+                        <polygon points="${wedge.points}" class="wedge interactive" fill="url(#grad-${i})" opacity="0.9" />
+                        <text class="symbol interactive" x="${wedge.textX}" y="${wedge.textY - 1}" fill="${t.text}" 
+                              text-anchor="middle" alignment-baseline="middle" transform="rotate(${wedge.rotation}, ${wedge.textX}, ${wedge.textY})">${t.symbol}</text>
+                        <text class="label interactive" x="${wedge.textX}" y="${wedge.textY + 3.5}" fill="${t.text}" 
+                              text-anchor="middle" alignment-baseline="middle" transform="rotate(${wedge.rotation}, ${wedge.textX}, ${wedge.textY})">${t.name.toUpperCase()}</text>
+                    </g>`;
+                });
+            }
+
+            const holeR = currentLevel === 1 ? 15 : 12;
+            let holePoints = "";
+            for(let i=0; i<8; i++) {
+                const angle = (i * 45 - 22.5) * Math.PI / 180;
+                const corner = holeR / Math.cos(22.5 * Math.PI / 180);
+                holePoints += `${50 + corner * Math.sin(angle)},${50 - corner * Math.cos(angle)} `;
+            }
+            svg += `<polygon points="${holePoints.trim()}" class="center-hole"/>`;
+            svg += `</svg>`;
+            document.getElementById('bagua-container').innerHTML = svg;
+        }
+
+        function selectLower(idx) {
+            selectedLowerIdx = idx;
+            const container = document.getElementById('bagua-container');
+
+            container.style.transform = 'scale(0.85) rotate(-45deg)';
+            container.style.opacity = '0';
+
+            setTimeout(() => {
+                currentLevel = 2;
+                renderBagua();
+
+                document.getElementById('ui-level').innerText = "The Elements of Life";
+                document.getElementById('ui-title').innerText = "Infinite Flow Oracle";
+                document.getElementById('ui-desc').innerText = "Select your external manifestation";
+
+                container.style.transform = 'scale(1) rotate(0deg)';
+                container.style.opacity = '1';
+            }, 800);
+        }
+
+        function selectUpper(idx) {
+            const upperIdx = idx;
+            const lowerIdx = selectedLowerIdx;
+            const hexNum = hexMatrix[upperIdx][lowerIdx];
+            const upperT = trigrams[upperIdx];
+            const lowerT = trigrams[lowerIdx];
+
+            document.getElementById('p-upper').innerText = upperT.symbol;
+            document.getElementById('p-lower').innerText = lowerT.symbol;
+            document.getElementById('p-name').innerText = `Hexagram ${hexNum}`;
+            document.getElementById('p-sub').innerText = `${upperT.name} over ${lowerT.name}`;
+
+            const storyText = getHexagramStory(hexNum, upperT.name, lowerT.name);
+            document.getElementById('magic-story').innerText = storyText;
+
+            const gkData = getGeneKeyData(hexNum);
+            document.getElementById('p-gk-title').innerText = `Gene Key ${hexNum}`;
+            document.getElementById('gk-shadow').innerText = gkData.s;
+            document.getElementById('gk-gift').innerText = gkData.g;
+            document.getElementById('gk-siddhi').innerText = gkData.si;
+
+            const cardData = getCardData(hexNum);
+
+            document.getElementById('card-error').style.display = 'none';
+            const frontImg = document.getElementById('card-front-img');
+            frontImg.style.display = 'block';
+            frontImg.src = cardData.image;
+            document.getElementById('card-back-img').src = cardData.image;
+
+            let backHTML = `
+                <div class="card-title">${cardData.title}</div>
+                <div class="card-subtitle">Inspired by Hexagram ${hexNum}</div>
+            `;
+
+            cardData.sections.forEach(sec => {
+                backHTML += `<div class="text-section"><h3>${sec.header}</h3>`;
+                sec.lines.forEach(line => {
+                    backHTML += `<p>${line}</p>`;
+                });
+                backHTML += `</div>`;
+            });
+
+            document.getElementById('card-content-data').innerHTML = backHTML;
+
+            document.getElementById('level3-view').style.backgroundImage = `radial-gradient(circle at top right, ${upperT.grad[1]}44, transparent 60%), radial-gradient(circle at bottom left, ${lowerT.grad[0]}44, transparent 60%), #050505`;
+
+            document.getElementById('ui-level').innerText = "Soulful Art";
+            document.getElementById('ui-title').innerText = "The Gallery";
+            document.getElementById('ui-desc').innerText = "A template of consciousness for your rapid transformation";
+
+            document.getElementById('bagua-container').style.transform = 'scale(2.5) rotate(90deg)';
+            document.getElementById('bagua-container').style.opacity = '0';
+
+            document.getElementById('btn-guide').style.opacity = '0';
+            document.getElementById('btn-guide').style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                document.getElementById('level3-view').classList.add('active');
+            }, 800);
+        }
+
+        function toggleFlip() {
+            document.getElementById('art-card').classList.toggle('flipped');
+        }
+
+        function resetToLevel1() {
+            currentLevel = 1;
+            selectedLowerIdx = null;
+
+            document.getElementById('level3-view').classList.remove('active');
+            document.getElementById('art-card').classList.remove('flipped');
+
+            setTimeout(() => {
+                renderBagua();
+
+                document.getElementById('ui-level').innerText = "The Elements of Life";
+                document.getElementById('ui-title').innerText = "Infinite Flow Oracle";
+                document.getElementById('ui-desc').innerText = "Select your internal foundation";
+
+                const container = document.getElementById('bagua-container');
+                container.style.transform = 'scale(1) rotate(0deg)';
+                container.style.opacity = '1';
+
+                document.getElementById('btn-guide').style.opacity = '1';
+                document.getElementById('btn-guide').style.pointerEvents = 'auto';
+            }, 1000);
+        }
+
+        function openGuide() {
+            document.getElementById('edu-modal').classList.add('active');
+        }
+
+        function closeGuide() {
+            document.getElementById('edu-modal').classList.remove('active');
+        }
+
+        renderBagua();
+
+    </script>
+</body>
+</html>
