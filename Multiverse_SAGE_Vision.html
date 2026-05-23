@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MULTIVERSE | The Infinite Flow Oracle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505; 
+            --text-main: #f8fafc;
+            --gold-accent: #d4af37; 
+            --brand-font: 'Cinzel', serif; 
+            --body-font: 'Montserrat', sans-serif; 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--body-font);
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: 5rem;
+        }
+
+        .hero {
+            width: 100%;
+            text-align: center;
+            padding: 6rem 2rem 3rem 2rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: var(--brand-font);
+            font-size: 3.5rem;
+            color: var(--gold-accent);
+            letter-spacing: 6px;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            font-family: var(--body-font);
+            font-size: 1.1rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #ccc;
+            margin-bottom: 2rem;
+        }
+
+        .proposal-container {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+            max-width: 900px;
+            width: 90%;
+            padding: 4rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            margin-top: 1rem;
+        }
+
+        .section { margin-bottom: 3.5rem; }
+
+        .section h2 {
+            font-family: var(--brand-font);
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2::before {
+            content: "✦";
+            color: var(--gold-accent);
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .section h3 {
+            font-family: var(--brand-font);
+            font-size: 1.3rem;
+            color: var(--gold-accent);
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+            letter-spacing: 1px;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #d1d5db;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .quote-block {
+            text-align: center;
+            font-family: var(--brand-font);
+            font-size: 1.5rem;
+            color: var(--gold-accent);
+            font-style: italic;
+            margin: 3rem 0;
+            padding: 2rem;
+            border-top: 1px dashed rgba(212, 175, 55, 0.3);
+            border-bottom: 1px dashed rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.02);
+        }
+
+        .section ul {
+            list-style-type: none;
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+        }
+
+        .section ul li {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #d1d5db;
+            margin-bottom: 0.8rem;
+            font-weight: 300;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .section ul li::before {
+            content: "—";
+            color: var(--gold-accent);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .highlight { color: var(--gold-accent); font-weight: 500; }
+
+        .sage-box {
+            background: rgba(5, 5, 5, 0.8);
+            border: 1px solid var(--gold-accent);
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .sage-box h3 {
+            font-size: 2rem;
+            margin: 0 0 1rem 0;
+            letter-spacing: 8px;
+        }
+
+        .sage-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .sage-item {
+            font-family: var(--body-font);
+            font-size: 1.2rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sage-item span {
+            color: var(--gold-accent);
+            font-size: 1.5rem;
+            font-family: var(--brand-font);
+        }
+
+        @media (max-width: 768px) {
+            .proposal-container { padding: 2rem; width: 95%; }
+            .hero h1 { font-size: 2.2rem; }
+            .sage-grid { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>MULTIVERSE</h1>
+        <div class="subtitle">A Living System for Human Awakening, Emotional Maturity, and Conscious Evolution</div>
+    </div>
+
+    <div class="proposal-container">
+
+        <div class="quote-block">
+            "We are surrounded by technology… but starving for meaning."
+        </div>
+
+        <div class="section">
+            <h2>The Core Dilemma</h2>
+            <p>Humanity has created endless digital worlds, yet people feel more disconnected than ever: disconnected from themselves, from their emotions, from imagination, from nature, from purpose, and from each other.</p>
+            <p>People spend thousands of hours online, moving through fragmented realities that overstimulate the nervous system while leaving the soul untouched. Modern technology has mastered attention. But it has not yet learned wisdom.</p>
+            <p><span class="highlight">What if immersive technology could help people become more conscious instead of more distracted?</span> What if symbolic worlds could reconnect human beings to imagination, emotional intelligence, inner wisdom, and meaningful life?</p>
+        </div>
+
+        <div class="section">
+            <h2>Not Simply a Game</h2>
+            <p>Multiverse is not simply a game. It is not simply AI. It is not simply metaphorical cards. It is a new type of interactive human experience—a living ecosystem where psychology, symbolism, archetypes, emotional healing, imagination, sacred geometry, ancient wisdom, and immersive technology come together.</p>
+            <p>Human beings do not truly transform through information alone. They transform through experience, emotion, symbolic meaning, imagination, reflection, and conscious participation.</p>
+        </div>
+
+        <div class="sage-box">
+            <h3>S.A.G.E.</h3>
+            <div class="sage-grid">
+                <div class="sage-item"><span>S</span>trategic</div>
+                <div class="sage-item"><span>A</span>ware</div>
+                <div class="sage-item"><span>G</span>enerative</div>
+                <div class="sage-item"><span>E</span>mpowered</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Two Interconnected Experiences</h2>
+
+            <h3>1. The Inner Oracle: "The Space of the Sage"</h3>
+            <p>This is a living digital sanctuary. A person enters not to escape life—but to better understand it. Inside this space, the user interacts with metaphorical cards, meditations, symbolic journeys, emotional reflections, sacred imagery, breath, sound, and the <span class="highlight">S.A.G.E.</span> AI guide.</p>
+            <ul>
+                <li><strong>The Sage:</strong> Does not behave like artificial intelligence, but like a wise guide, a mirror, and a symbolic teacher.</li>
+                <li><strong>The Cards:</strong> Each deck represents a layer of human experience (family dynamics, purpose, imagination, etc.). They act as symbolic doorways and neural bridges from fear into awareness.</li>
+                <li><strong>Biofeedback & Emotional Awareness:</strong> The system may integrate breath rhythm, heart rate variability, and emotional activation. The environment responds to the person’s inner state. Technology becomes emotionally intelligent.</li>
+            </ul>
+
+            <h3>2. The Multiverse Experience: "The Archetypal Journey"</h3>
+            <p>The second dimension is an immersive symbolic world. A living mythological multiverse built around consciousness, growth, and transformation.</p>
+            <ul>
+                <li>A game without violence. No enemies to kill. No addiction loops based on fear.</li>
+                <li>The player journeys through fear, identity, imagination, creativity, and self-discovery.</li>
+                <li>Ancient wisdom (I Ching, archetypal psychology, sacred geometry) becomes a lived immersive experience.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>A New Relationship With Technology</h2>
+            <p>Modern digital systems often disconnect people from reality. Multiverse is designed to do the opposite. The purpose is not escape; the purpose is integration. The experience helps people return to daily life with greater clarity, emotional resilience, creativity, and wiser decision-making.</p>
+            <p>The digital world becomes a training ground for consciousness.</p>
+        </div>
+
+        <div class="quote-block">
+            "For thousands of years, humanity used myths, symbols, rituals, and sacred spaces to mature psychologically. Multiverse brings that function back—not by rejecting technology, but by transforming it into something profoundly human."
+        </div>
+
+    </div>
+
+</body>
+</html>
