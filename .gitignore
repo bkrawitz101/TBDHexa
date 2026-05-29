@@ -1,0 +1,11 @@
+# Python and Virtual Environments
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# PyInstaller Build Folders
+build/
+dist/
+*.spec
+*.app

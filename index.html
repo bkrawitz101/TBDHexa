@@ -402,13 +402,14 @@
         }
 
         .perspective-container {
+            --card-ratio: 0.767;
             perspective: 2000px;
-            width: calc(65vh * 0.767); 
-            height: 65vh;
+            width: calc(65vh * var(--card-ratio)); 
+            aspect-ratio: var(--card-ratio);
             max-width: 90vw;
-            max-height: calc(90vw / 0.767);
             cursor: pointer;
             margin-bottom: 1.5rem;
+            transition: width 0.3s ease, aspect-ratio 0.3s ease;
         }
 
         .flip-card {
@@ -445,75 +446,10 @@
 
         .card-back {
             transform: rotateY(180deg);
-            background-color: #050505;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            padding: 2.5rem 2rem;
-            color: #fff;
-            text-align: left;
-            overflow-y: auto;
-        }
-
-        .card-back-bg {
-            position: absolute;
-            inset: 0;
             background-size: cover;
             background-position: center;
-            filter: grayscale(100%) brightness(0.15) blur(5px);
-            z-index: 0;
-        }
-
-        .card-content {
-            position: relative;
-            z-index: 1;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-title {
-            font-family: var(--brand-font);
-            font-size: 1.6rem;
-            color: var(--gold-accent);
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-            font-weight: 400;
-        }
-
-        .card-subtitle {
-            font-family: var(--body-font);
-            font-weight: 300;
-            color: #aaa;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-            padding-bottom: 0.8rem;
-        }
-
-        .text-section {
-            margin-bottom: 1.5rem;
-        }
-
-        .text-section h3 {
-            font-family: var(--body-font);
-            font-size: 0.85rem;
-            color: var(--gold-accent);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .text-section p {
-            font-family: var(--brand-font);
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #eee;
-            font-weight: 400;
-            margin-bottom: 0.4rem;
+            background-repeat: no-repeat;
+            background-color: #000;
         }
 
         .click-hint {
@@ -530,6 +466,20 @@
 
         .perspective-container:hover + .click-hint {
             color: var(--gold-accent);
+        }
+
+        .deck-lore {
+            margin-top: 1.5rem;
+            max-width: 95%;
+            text-align: center;
+            font-family: var(--body-font);
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--gold-accent);
+            line-height: 1.6;
+            opacity: 0.9;
+            border-top: 1px dashed rgba(212, 175, 55, 0.3);
+            padding-top: 1rem;
         }
 
         .btn-back-header {
@@ -565,13 +515,13 @@
             line-height: 1;
         }
 
-        .card-back::-webkit-scrollbar, .edu-content::-webkit-scrollbar { width: 4px; }
-        .card-back::-webkit-scrollbar-track, .edu-content::-webkit-scrollbar-track { background: transparent; }
-        .card-back::-webkit-scrollbar-thumb, .edu-content::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.5); }
+        .edu-content::-webkit-scrollbar { width: 4px; }
+        .edu-content::-webkit-scrollbar-track { background: transparent; }
+        .edu-content::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.5); }
 
         @media (max-width: 900px) {
             .content-wrapper { flex-direction: column; gap: 3rem; margin-top: 0;}
-            .perspective-container { height: 55vh; width: calc(55vh * 0.767); }
+            .perspective-container { width: calc(55vh * var(--card-ratio)); }
             #ui-layer { padding: 1.5rem 1.5rem 1rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
             #ui-layer.level3-mode { padding: 1rem 1.5rem; gap: 0.4rem; }
             #ui-layer.level3-mode .titles-wrapper { align-items: flex-start; text-align: left; }
@@ -669,12 +619,12 @@
                             <div id="card-error" style="display:none; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; color:#ff6b6b; font-family:var(--body-font); font-size: 0.9rem; text-align:center; padding:2rem;"></div>
                         </div>
                         <div class="card-face card-back">
-                            <img class="card-back-bg" id="card-back-img" src="" alt="Background Art" style="width: 100%; height: 100%; object-fit: cover;" />
-                            <div class="card-content" id="card-content-data"></div>
+                            <img id="card-back-img" src="" alt="Card Back Art" style="width: 100%; height: 100%; object-fit: cover;" />
                         </div>
                     </div>
                 </div>
                 <div class="click-hint">REVEAL THE MESSAGE</div>
+                <div id="deck-lore-text" class="deck-lore"></div>
             </div>
         </div>
     </div>
@@ -837,6 +787,11 @@
     64: "Like a little fox trying to cross a freezing river, you are almost at the finish line! But you have to take careful, mindful steps, because the journey isn't quite over yet. Trust yourself, but don't rush!",
 };
 
+        const deckMysticLore = {
+            "Genies_Bottle": "The Genie’s Bottle has appeared. Fate suggests that your inner wishes and latent potential are ready to be uncorked. A sudden release of long-held energy is at hand.",
+            "Infinite_Flow": "The Infinite Flow deck has emerged. The universe guides you toward graceful surrender. Trust the current of life; do not push the river, but let it carry you.",
+            "Tricksters": "The Trickster has stepped forward. Nothing is quite as it seems. Be prepared for playful disruptions and sudden shifts in perspective that reveal hidden truths through chaos."
+        };
 
         function getGeneKeyData(hexNum) {
             return geneKeysDB[hexNum] || { s: "Shadow", g: "Gift", si: "Siddhi" };
@@ -1098,28 +1053,38 @@
             }
         };
 
-        const localImages = {
-            4: "images/04_Monkeyhex.jpeg",
-            6: "images/06_Porcupinehex.jpeg",
-            7: "images/07_Caterpillar.jpeg",
-            29: "images/29_Pythonhex.jpeg",
-            40: "images/40_Wasphex.jpeg",
-            47: "images/47_Donkeyhex.jpeg",
-            59: "images/59_Snailhex.jpeg",
-            64: "images/64_Lobsterhex.jpeg"
-        };
+        function getRandomDeckImages(hexNum) {
+            const decks = ["Genies_Bottle", "Infinite_Flow", "Tricksters"];
+            const chosenDeck = decks[Math.floor(Math.random() * decks.length)];
+            
+            // Format number to always be two digits (e.g., 1 becomes '01')
+            const numStr = hexNum.toString().padStart(2, '0');
+            
+            return {
+                front: `images/${numStr}_${chosenDeck}.webp`,
+                back: `images/${numStr}_${chosenDeck}_Back.webp`,
+                lore: deckMysticLore[chosenDeck]
+            };
+        }
 
         function getCardData(hexNum) {
-            if (cardDataDB[hexNum]) return cardDataDB[hexNum];
-            return {
+            const randomImages = getRandomDeckImages(hexNum);
+            let data = cardDataDB[hexNum] || {
                 title: `Archetype ${hexNum}`,
-                image: localImages[hexNum] || "https://images.unsplash.com/photo-1604871000636-074fa5117945?ixlib=rb-4.0.3&auto=format&fit=crop&w=791&q=80",
+                image: "https://images.unsplash.com/photo-1604871000636-074fa5117945?ixlib=rb-4.0.3&auto=format&fit=crop&w=791&q=80",
                 sections: [
                     { header: "I am called...", lines: ["A wanderer of the unknown."] },
                     { header: "I often feel", lines: ["uncertain but curious"] },
                     { header: "I want to be", lines: ["grounded, focused, clear"] },
                     { header: "I succeed when", lines: ["I trust the process", "I embrace the frequency of Hexagram " + hexNum] }
                 ]
+            };
+
+            return {
+                ...data,
+                image: randomImages.front, // Replaces static image with dynamic front
+                backImage: randomImages.back, // Adds dynamic back image
+                deckLore: randomImages.lore // Adds mystical explanation
             };
         }
 
@@ -1270,23 +1235,21 @@
             document.getElementById('card-error').style.display = 'none';
             const frontImg = document.getElementById('card-front-img');
             frontImg.style.display = 'block';
+            
+            frontImg.onload = function() {
+                if (this.naturalWidth && this.naturalHeight) {
+                    const ratio = this.naturalWidth / this.naturalHeight;
+                    document.querySelector('.perspective-container').style.setProperty('--card-ratio', ratio);
+                }
+            };
+            
             frontImg.src = cardData.image;
-            document.getElementById('card-back-img').src = cardData.image;
-
-            let backHTML = `
-                <div class="card-title">${cardData.title}</div>
-                <div class="card-subtitle">Inspired by Hexagram ${hexNum}</div>
-            `;
-
-            cardData.sections.forEach(sec => {
-                backHTML += `<div class="text-section"><h3>${sec.header}</h3>`;
-                sec.lines.forEach(line => {
-                    backHTML += `<p>${line}</p>`;
-                });
-                backHTML += `</div>`;
-            });
-
-            document.getElementById('card-content-data').innerHTML = backHTML;
+            
+            const backImg = document.getElementById('card-back-img');
+            backImg.style.display = 'block';
+            backImg.src = cardData.backImage;
+            
+            document.getElementById('deck-lore-text').innerText = cardData.deckLore;
 
             document.getElementById('level3-view').style.backgroundImage = `radial-gradient(circle at top right, ${upperT.grad[1]}44, transparent 60%), radial-gradient(circle at bottom left, ${lowerT.grad[0]}44, transparent 60%), #050505`;
 
