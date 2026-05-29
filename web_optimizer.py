@@ -260,7 +260,10 @@ HTML_TEMPLATE = """
       
       <label>Rename Pattern (Optional)</label>
       <input type="text" name="rename_pattern" value="{{ rename_pattern or '' }}" placeholder="e.g., product_{i}">
-      <div class="help-text">Prefixes with XX_ numbering automatically. (e.g., Name -> 01_Name)</div>
+      <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin-top: 0.5rem; color: #7a6b5d; font-size: 0.8rem; text-transform: none; letter-spacing: normal; font-family: 'Space Mono', monospace;">
+        <input type="checkbox" name="add_prefix" style="width: auto; margin: 0;" {% if add_prefix %}checked{% endif %}>
+        Add numeric prefix (e.g., 01_Name)
+      </label>
 
       <label>Output Format</label>
       <select name="output_format">
@@ -322,7 +325,7 @@ HTML_TEMPLATE = """
             <li><strong>Select Folders:</strong> Click the Input/Output fields to browse your local directories.</li>
             <li><strong>Ordering:</strong> Files are sorted numerically based on numbers found in the filename (e.g., "image_2" stays before "image_10").</li>
             <li><strong>PDFs:</strong> PDFs are automatically split into individual images based on their page numbers.</li>
-            <li><strong>Naming:</strong> Every output file is prefixed with <code>XX_</code> (e.g., 01_, 02_) followed by your Rename Pattern or the original name.</li>
+            <li><strong>Naming:</strong> Use the "Add numeric prefix" checkbox to prepend <code>XX_</code> to your files. If unchecked and no pattern is used, original filenames are kept completely raw and unchanged.</li>
             <li><strong>Watermarks:</strong> You can use text, an image logo, or both. The "Size" affects the watermark height relative to the image.</li>
             <li><strong>Atmospheric Specs:</strong> For custom backgrounds, use <strong>2560x1440px WebP</strong> with a 16:9 aspect ratio and dark central focus.</li>
           </ol>
@@ -398,10 +401,12 @@ def browse_folder():
 def index():
     message = ""
     errors = []
+    add_prefix = True
     if request.method == "POST":
         in_dir, out_dir = request.form.get("input_dir"), request.form.get("output_dir")
         w, q, ar = int(request.form.get("width")), int(request.form.get("quality")), request.form.get("aspect_ratio")
         rename_pattern = request.form.get("rename_pattern", "").strip()
+        add_prefix = request.form.get("add_prefix") == "on"
         output_format = request.form.get("output_format", "webp").lower()
         watermark = request.form.get("watermark", "").strip()
         wm_pos = request.form.get("wm_pos", "bottom-right")
@@ -419,7 +424,7 @@ def index():
             errors.append("AVIF support requires the 'pillow-avif-plugin'. Run 'pip install pillow-avif-plugin' and restart the script.")
         elif in_path.exists() and in_path.is_dir():
             # Filter and sort files based on numeric content in filenames
-            extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.pdf'}
+            extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.pdf', '.webp'}
             sorted_files = sorted(
                 [f for f in in_path.iterdir() if f.is_file() and f.suffix.lower() in extensions],
                 key=get_sort_key
@@ -439,14 +444,12 @@ def index():
                             pix = doc[page_index].get_pixmap(matrix=fitz.Matrix(300/72, 300/72))
                             image_bytes = pix.tobytes("png")
                             
-                            # Pattern logic: Use provided name or filename stem
-                            effective_pattern = rename_pattern if rename_pattern else f.stem
-                            new_stem = get_new_stem(effective_pattern, f.stem, count)
+                            new_stem = get_new_stem(rename_pattern, f.stem, count, add_prefix, is_pdf=True)
                             process_image(io.BytesIO(image_bytes), out_path / f"{new_stem}.{output_format}", w, q, t_ratio, watermark, wm_pos, wm_size, wm_opacity, wm_color, wm_image_path, output_format)
                             count += 1
                         doc.close()
                     else:
-                        new_stem = get_new_stem(rename_pattern, f.stem, count)
+                        new_stem = get_new_stem(rename_pattern, f.stem, count, add_prefix)
                         process_image(f, out_path / f"{new_stem}.{output_format}", w, q, t_ratio, watermark, wm_pos, wm_size, wm_opacity, wm_color, wm_image_path, output_format)
                         count += 1
 
@@ -459,14 +462,26 @@ def index():
         else:
             message = f"Error: '{in_dir}' does not exist."
             
-    return render_template_string(HTML_TEMPLATE, message=message, errors=errors, **request.form)
+    return render_template_string(HTML_TEMPLATE, message=message, errors=errors, add_prefix=add_prefix, **request.form)
 
-def get_new_stem(pattern, original_stem, current_count):
-    index_str = f"{current_count + 1:02d}"
-    # Replacing spaces with underscores to maintain the "Name_Name" convention
+def get_new_stem(pattern, original_stem, current_count, add_prefix, is_pdf=False):
+    if not pattern and not add_prefix:
+        if is_pdf:
+            return f"{original_stem}_{current_count + 1}"
+        return original_stem
+        
     source_name = pattern if pattern else original_stem
-    clean_name = source_name.replace("{i}", "").strip("_").replace(" ", "_")
-    return f"{index_str}_{clean_name}"
+    
+    if add_prefix:
+        clean_name = source_name.replace("{i}", "").strip("_").replace(" ", "_")
+        index_str = f"{current_count + 1:02d}"
+        return f"{index_str}_{clean_name}"
+    else:
+        if "{i}" in source_name:
+            return source_name.replace("{i}", str(current_count + 1)).replace(" ", "_")
+        if is_pdf:
+            return f"{source_name.replace(' ', '_')}_{current_count + 1}"
+        return source_name.replace(" ", "_")
 
 if __name__ == "__main__":
     port = 5005
