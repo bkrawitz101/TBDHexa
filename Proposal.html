@@ -262,6 +262,118 @@
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
         }
 
+        /* --- Full Screen Modal Styles --- */
+        #team-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #team-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card-wrapper {
+            position: relative;
+            perspective: 1500px;
+            width: calc(85vh * 0.767);
+            max-width: 85vw;
+            aspect-ratio: 0.767;
+            cursor: pointer;
+        }
+
+        .modal-card-wrapper .flip-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            border-radius: 4px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+        }
+
+        .modal-card-wrapper .card-front, .modal-card-wrapper .card-back {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .modal-card-wrapper .card-face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--gold-accent);
+            font-size: 3.5rem;
+            cursor: pointer;
+            padding: 1rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+            z-index: 2001;
+        }
+
+        .modal-nav-btn:hover {
+            color: #fff;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .modal-nav-btn.prev { left: 4%; }
+        .modal-nav-btn.next { right: 4%; }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            background: transparent;
+            border: none;
+            color: var(--gold-accent);
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            z-index: 2001;
+            line-height: 1;
+        }
+
+        .modal-close-btn:hover { color: #fff; }
+
+        .modal-hint {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: var(--gold-accent);
+            font-family: var(--body-font);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .modal-hint.top {
+            top: -2rem;
+        }
+
+        .modal-hint.bottom {
+            bottom: -2rem;
+        }
+
         @media (max-width: 768px) {
             .proposal-container { padding: 2rem; width: 95%; }
             .hero h1 { font-size: 2.2rem; }
@@ -269,6 +381,10 @@
                 grid-template-columns: 1fr;
                 max-width: 320px;
             }
+            .modal-nav-btn { font-size: 2.5rem; padding: 0.5rem; }
+            .modal-nav-btn.prev { left: -5px; }
+            .modal-nav-btn.next { right: -5px; }
+            .modal-close-btn { top: 15px; right: 15px; font-size: 2rem; }
         }
     </style>
 </head>
@@ -389,21 +505,21 @@
             <p>Meet the visionary creators and developers bringing The Infinite Realms Oracle to life.</p>
         </div>
 
-        <div class="gallery-hint">✦ Click Cards To Reveal ✦</div>
+        <div class="gallery-hint">✦ Click Cards To Enlarge & Read ✦</div>
         <div class="team-gallery">
-            <div class="flip-container" onclick="this.querySelector('.flip-card').classList.toggle('flipped')">
+            <div class="flip-container" onclick="openTeamModal(0)">
                 <div class="flip-card">
                     <div class="card-face card-front"><img src="images/Alexandra_Front.webp" alt="Alexandra Front"></div>
                     <div class="card-face card-back"><img src="images/Alexandra_Back.webp" alt="Alexandra Back"></div>
                 </div>
             </div>
-            <div class="flip-container" onclick="this.querySelector('.flip-card').classList.toggle('flipped')">
+            <div class="flip-container" onclick="openTeamModal(1)">
                 <div class="flip-card">
                     <div class="card-face card-front"><img src="images/Svetlana_Front.webp" alt="Svetlana Front"></div>
                     <div class="card-face card-back"><img src="images/Svetlana_Back.webp" alt="Svetlana Back"></div>
                 </div>
             </div>
-            <div class="flip-container" onclick="this.querySelector('.flip-card').classList.toggle('flipped')">
+            <div class="flip-container" onclick="openTeamModal(2)">
                 <div class="flip-card">
                     <div class="card-face card-front"><img src="images/Brian_Front.webp" alt="Brian Front"></div>
                     <div class="card-face card-back"><img src="images/Brian_Back.webp" alt="Brian Back"></div>
@@ -418,5 +534,78 @@
 
     </div>
 
+    <!-- Full Screen Modal Overlay -->
+    <div id="team-modal">
+        <button class="modal-close-btn" onclick="closeTeamModal()">✕</button>
+        <button class="modal-nav-btn prev" onclick="prevTeamCard(event)">&#10094;</button>
+        
+        <div class="modal-card-wrapper" id="modal-card-wrapper">
+            <!-- Card is dynamically injected here via JavaScript -->
+        </div>
+        
+        <button class="modal-nav-btn next" onclick="nextTeamCard(event)">&#10095;</button>
+    </div>
+
+    <script>
+        const teamMembers = [
+            { front: 'images/Alexandra_Front.webp', back: 'images/Alexandra_Back.webp' },
+            { front: 'images/Svetlana_Front.webp', back: 'images/Svetlana_Back.webp' },
+            { front: 'images/Brian_Front.webp', back: 'images/Brian_Back.webp' }
+        ];
+        
+        let currentTeamIndex = 0;
+
+        function openTeamModal(index) {
+            currentTeamIndex = index;
+            renderTeamModalCard();
+            document.getElementById('team-modal').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevents background from scrolling
+        }
+
+        function closeTeamModal() {
+            document.getElementById('team-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function nextTeamCard(event) {
+            if (event) event.stopPropagation();
+            currentTeamIndex = (currentTeamIndex + 1) % teamMembers.length;
+            renderTeamModalCard();
+        }
+
+        function prevTeamCard(event) {
+            if (event) event.stopPropagation();
+            currentTeamIndex = (currentTeamIndex - 1 + teamMembers.length) % teamMembers.length;
+            renderTeamModalCard();
+        }
+
+        function renderTeamModalCard() {
+            const member = teamMembers[currentTeamIndex];
+            const container = document.getElementById('modal-card-wrapper');
+            container.innerHTML = `
+                <div class="modal-hint top">✦ Click to Flip ✦</div>
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-face card-front"><img src="${member.front}" alt="Team Member Front"></div>
+                    <div class="card-face card-back"><img src="${member.back}" alt="Team Member Bio"></div>
+                </div>
+                <div class="modal-hint bottom">✦ Click to Flip ✦</div>
+            `;
+        }
+
+        // Add Keyboard support for a premium feel
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('team-modal');
+            if (modal && modal.classList.contains('active')) {
+                if (e.key === 'Escape') closeTeamModal();
+                if (e.key === 'ArrowRight') nextTeamCard();
+                if (e.key === 'ArrowLeft') prevTeamCard();
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    const card = document.querySelector('#modal-card-wrapper .flip-card');
+                    if (card) card.classList.toggle('flipped');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
