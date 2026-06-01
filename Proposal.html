@@ -12,6 +12,7 @@
             --gold-accent: #d4af37; 
             --brand-font: 'Cinzel', serif; 
             --body-font: 'Montserrat', sans-serif; 
+            --papyrus-font: 'Papyrus', 'Cinzel', fantasy;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -262,8 +263,8 @@
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
         }
 
-        /* --- Full Screen Modal Styles --- */
-        #team-modal {
+        /* --- Text Bio Modal Styles --- */
+        #bio-modal {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.92);
@@ -275,66 +276,36 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.4s ease;
+            padding: 2rem;
         }
 
-        #team-modal.active {
+        #bio-modal.active {
             opacity: 1;
             pointer-events: auto;
         }
 
-        .modal-card-wrapper {
-            position: relative;
-            perspective: 1500px;
-            width: calc(85vh * 0.767);
-            max-width: 85vw;
-            aspect-ratio: 0.767;
-            cursor: pointer;
-        }
-
-        .modal-card-wrapper .flip-card {
+        .bio-content {
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid var(--gold-accent);
+            max-width: 800px;
             width: 100%;
-            height: 100%;
-            position: relative;
-            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-            transform-style: preserve-3d;
             border-radius: 4px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-            border: 1px solid rgba(212, 175, 55, 0.5);
+            padding: 4rem 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .modal-card-wrapper .card-front, .modal-card-wrapper .card-back {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+        #bio-modal.active .bio-content {
+            transform: translateY(0);
         }
 
-        .modal-card-wrapper .card-face img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            color: var(--gold-accent);
-            font-size: 3.5rem;
-            cursor: pointer;
-            padding: 1rem;
-            transition: color 0.3s ease, transform 0.3s ease;
-            z-index: 2001;
-        }
-
-        .modal-nav-btn:hover {
-            color: #fff;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .modal-nav-btn.prev { left: 4%; }
-        .modal-nav-btn.next { right: 4%; }
+        .bio-content::-webkit-scrollbar { width: 4px; }
+        .bio-content::-webkit-scrollbar-track { background: transparent; }
+        .bio-content::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.5); }
 
         .modal-close-btn {
             position: absolute;
@@ -352,26 +323,51 @@
 
         .modal-close-btn:hover { color: #fff; }
 
-        .modal-hint {
+        .btn-flip-back {
             position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--gold-accent);
+            color: var(--gold-accent);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: var(--body-font);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .btn-flip-back:hover {
+            background: var(--gold-accent);
+            color: #000;
+        }
+
+        .click-hint-bio {
+            position: absolute;
+            bottom: 0;
             left: 0;
             width: 100%;
+            background: rgba(212, 175, 55, 0.95);
+            color: #000;
             text-align: center;
-            color: var(--gold-accent);
+            padding: 0.8rem 0;
             font-family: var(--body-font);
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 0.9rem;
-            pointer-events: none;
-            opacity: 0.7;
+            letter-spacing: 2px;
+            font-weight: 600;
+            transition: background 0.3s;
+            cursor: pointer;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
         }
 
-        .modal-hint.top {
-            top: -2rem;
-        }
-
-        .modal-hint.bottom {
-            bottom: -2rem;
+        .click-hint-bio:hover {
+            background: #fff;
         }
 
         @media (max-width: 768px) {
@@ -381,10 +377,8 @@
                 grid-template-columns: 1fr;
                 max-width: 320px;
             }
-            .modal-nav-btn { font-size: 2.5rem; padding: 0.5rem; }
-            .modal-nav-btn.prev { left: -5px; }
-            .modal-nav-btn.next { right: -5px; }
             .modal-close-btn { top: 15px; right: 15px; font-size: 2rem; }
+            .bio-content { padding: 3rem 1.5rem; }
         }
     </style>
 </head>
@@ -505,24 +499,42 @@
             <p>Meet the visionary creators and developers bringing The Infinite Realms Oracle to life.</p>
         </div>
 
-        <div class="gallery-hint">✦ Click Cards To Enlarge & Read ✦</div>
+        <div class="gallery-hint">✦ Click Cards To Flip ✦</div>
         <div class="team-gallery">
-            <div class="flip-container" onclick="openTeamModal(0)">
-                <div class="flip-card">
-                    <div class="card-face card-front"><img src="images/Alexandra_Front.webp" alt="Alexandra Front"></div>
-                    <div class="card-face card-back"><img src="images/Alexandra_Back.webp" alt="Alexandra Back"></div>
+            <div class="flip-container">
+                <div class="flip-card" id="team-card-0">
+                    <div class="card-face card-front" onclick="document.getElementById('team-card-0').classList.toggle('flipped')">
+                        <img src="images/Alexandra_Front.webp" alt="Alexandra Front">
+                    </div>
+                    <div class="card-face card-back" onclick="openBioModal(0)">
+                        <img src="images/Alexandra_Back.webp" alt="Alexandra Back">
+                        <button class="btn-flip-back" onclick="event.stopPropagation(); document.getElementById('team-card-0').classList.toggle('flipped')">⟲ Flip</button>
+                        <div class="click-hint-bio">✦ Read Bio ✦</div>
+                    </div>
                 </div>
             </div>
-            <div class="flip-container" onclick="openTeamModal(1)">
-                <div class="flip-card">
-                    <div class="card-face card-front"><img src="images/Svetlana_Front.webp" alt="Svetlana Front"></div>
-                    <div class="card-face card-back"><img src="images/Svetlana_Back.webp" alt="Svetlana Back"></div>
+            <div class="flip-container">
+                <div class="flip-card" id="team-card-1">
+                    <div class="card-face card-front" onclick="document.getElementById('team-card-1').classList.toggle('flipped')">
+                        <img src="images/Svetlana_Front.webp" alt="Svetlana Front">
+                    </div>
+                    <div class="card-face card-back" onclick="openBioModal(1)">
+                        <img src="images/Svetlana_Back.webp" alt="Svetlana Back">
+                        <button class="btn-flip-back" onclick="event.stopPropagation(); document.getElementById('team-card-1').classList.toggle('flipped')">⟲ Flip</button>
+                        <div class="click-hint-bio">✦ Read Bio ✦</div>
+                    </div>
                 </div>
             </div>
-            <div class="flip-container" onclick="openTeamModal(2)">
-                <div class="flip-card">
-                    <div class="card-face card-front"><img src="images/Brian_Front.webp" alt="Brian Front"></div>
-                    <div class="card-face card-back"><img src="images/Brian_Back.webp" alt="Brian Back"></div>
+            <div class="flip-container">
+                <div class="flip-card" id="team-card-2">
+                    <div class="card-face card-front" onclick="document.getElementById('team-card-2').classList.toggle('flipped')">
+                        <img src="images/Brian_Front.webp" alt="Brian Front">
+                    </div>
+                    <div class="card-face card-back" onclick="openBioModal(2)">
+                        <img src="images/Brian_Back.webp" alt="Brian Back">
+                        <button class="btn-flip-back" onclick="event.stopPropagation(); document.getElementById('team-card-2').classList.toggle('flipped')">⟲ Flip</button>
+                        <div class="click-hint-bio">✦ Read Bio ✦</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -534,76 +546,50 @@
 
     </div>
 
-    <!-- Full Screen Modal Overlay -->
-    <div id="team-modal">
-        <button class="modal-close-btn" onclick="closeTeamModal()">✕</button>
-        <button class="modal-nav-btn prev" onclick="prevTeamCard(event)">&#10094;</button>
-        
-        <div class="modal-card-wrapper" id="modal-card-wrapper">
-            <!-- Card is dynamically injected here via JavaScript -->
+    <!-- Text Bio Modal Overlay -->
+    <div id="bio-modal">
+        <div class="bio-content">
+            <button class="modal-close-btn" onclick="closeBioModal()">✕</button>
+            <h2 id="bio-modal-title" style="font-family: var(--papyrus-font); font-size: 2.2rem; color: var(--gold-accent); margin-bottom: 1.5rem; font-weight: normal; text-align: center; letter-spacing: 2px;"></h2>
+            <div id="bio-modal-text" style="font-family: var(--papyrus-font); font-size: 1.15rem; line-height: 1.8; color: #d1d5db;">
+                <!-- Text is dynamically injected here -->
+            </div>
         </div>
-        
-        <button class="modal-nav-btn next" onclick="nextTeamCard(event)">&#10095;</button>
     </div>
 
     <script>
         const teamMembers = [
-            { front: 'images/Alexandra_Front.webp', back: 'images/Alexandra_Back.webp' },
-            { front: 'images/Svetlana_Front.webp', back: 'images/Svetlana_Back.webp' },
-            { front: 'images/Brian_Front.webp', back: 'images/Brian_Back.webp' }
+            { 
+                name: 'Alexandra Isaievych',
+                bio: 'Alexandra Isaievych is a visual artist who combines extensive training both in visual arts and dance, and many diverse interests, including a Master’s degree in economic policy. Besides exhibiting her artwork, Alexandra has worked as a translator, language teacher, contributing author of a language textbook, economic policy advisor, and also in non-profit sector management.<br><br>Her interests revolve around the transformative power of understanding the cosmological wisdom of the I Ching, and other systems like Human Design and Gene Keys, which use the I Ching’s 64 hexagrams to illuminate the uniqueness of each person’s path.<br><br>Following principles of sustainable design, she seeks to bring together insights from her own path of healing, and her work in realms of culture and policy, and her lifelong interest in creative expression, ancient traditions, wisdom of nature, and of our indigenous ancestors into how to live harmoniously both with the people and with the greater world around us.'
+            },
+            { 
+                name: 'Svetlana Pritzker',
+                bio: 'Svetlana Pritzker works at the intersection of ancient wisdom, human behavior, symbolic intelligence, and transformational art. She is an Author, Mystical Artist, and Human Potential Architect. Svetlana enjoys designing Symbolic Systems , analysing Archetypal Behavioral patterns, and creating Crisis Navigation Strategies.<br><br>Through her immersive transformational teachings  she helps people recognize hidden secrets of innate developmental codes, move through crisis with clarity, reconnect to their authentic nature, and transform inner insight into meaningful action, creative expression, and conscious living.'
+            },
+            { 
+                name: 'Brian Krawitz',
+                bio: 'Brian Krawitz has taken a life\'s worth of multidisciplinary experience and woven it into who he is now, an Imagineer, Community Instigator, MetaConnector, Poetic Philosopher, Transmedia Visionary, Transformational Futurist, and Creative Technology Evangelist. His noble purpose as defined by who is, what does, and why he does it is to bridge the gap between imagination and reality, within the physical and virtual worlds. He see\'s things from a unique viewpoint, which enables him to start with a dream and help unlock its potential.'
+            }
         ];
-        
-        let currentTeamIndex = 0;
 
-        function openTeamModal(index) {
-            currentTeamIndex = index;
-            renderTeamModalCard();
-            document.getElementById('team-modal').classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevents background from scrolling
+        function openBioModal(index) {
+            document.getElementById('bio-modal-title').innerText = teamMembers[index].name;
+            document.getElementById('bio-modal-text').innerHTML = teamMembers[index].bio;
+            document.getElementById('bio-modal').classList.add('active');
+            document.body.style.overflow = 'hidden'; 
         }
 
-        function closeTeamModal() {
-            document.getElementById('team-modal').classList.remove('active');
+        function closeBioModal() {
+            document.getElementById('bio-modal').classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        function nextTeamCard(event) {
-            if (event) event.stopPropagation();
-            currentTeamIndex = (currentTeamIndex + 1) % teamMembers.length;
-            renderTeamModalCard();
-        }
-
-        function prevTeamCard(event) {
-            if (event) event.stopPropagation();
-            currentTeamIndex = (currentTeamIndex - 1 + teamMembers.length) % teamMembers.length;
-            renderTeamModalCard();
-        }
-
-        function renderTeamModalCard() {
-            const member = teamMembers[currentTeamIndex];
-            const container = document.getElementById('modal-card-wrapper');
-            container.innerHTML = `
-                <div class="modal-hint top">✦ Click to Flip ✦</div>
-                <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                    <div class="card-face card-front"><img src="${member.front}" alt="Team Member Front"></div>
-                    <div class="card-face card-back"><img src="${member.back}" alt="Team Member Bio"></div>
-                </div>
-                <div class="modal-hint bottom">✦ Click to Flip ✦</div>
-            `;
-        }
-
-        // Add Keyboard support for a premium feel
+        // Add Keyboard support to close the modal
         document.addEventListener('keydown', function(e) {
-            const modal = document.getElementById('team-modal');
+            const modal = document.getElementById('bio-modal');
             if (modal && modal.classList.contains('active')) {
-                if (e.key === 'Escape') closeTeamModal();
-                if (e.key === 'ArrowRight') nextTeamCard();
-                if (e.key === 'ArrowLeft') prevTeamCard();
-                if (e.key === ' ' || e.key === 'Enter') {
-                    e.preventDefault();
-                    const card = document.querySelector('#modal-card-wrapper .flip-card');
-                    if (card) card.classList.toggle('flipped');
-                }
+                if (e.key === 'Escape') closeBioModal();
             }
         });
     </script>
