@@ -153,6 +153,14 @@
             margin: 3rem auto;
         }
 
+        .team-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 3rem auto;
+        }
+
         .flip-container {
             perspective: 1500px;
             width: 100%;
@@ -257,6 +265,10 @@
         @media (max-width: 768px) {
             .proposal-container { padding: 2rem; width: 95%; }
             .hero h1 { font-size: 2.2rem; }
+            .art-gallery, .team-gallery {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+            }
         }
     </style>
 </head>
@@ -276,7 +288,7 @@
 
         <div class="section">
             <h2>1. Executive Summary</h2>
-            <p>The <strong>Infinite Realms Oracle App</strong> is an interactive, web-based tool inspired by the physical <em>Infinite Flow Oracle</em> deck created by Alexandra Isaievych Mason and Svetlana Pritzker. The application bridges traditional Daoist cosmology of the I Ching and contemporary psychological mapping, using Insightful Color’s whimsical artwork as the primary vehicle for translation.</p>
+            <p>The <strong>Infinite Realms Oracle App</strong> is an interactive, web-based tool born from the living oracle worlds co-created by Alexandra Isaievych Mason and Svetlana Pritzker. Within this constellation, the Infinite Flow, Tricksters, and Genies in a Bottle decks each open a different doorway into the same shared realm of symbols, stories, and inner alchemy. Infinite Flow and Tricksters arose from their shared creative dance, while Genies in a Bottle was carried by Svetlana as a solo offering, still held inside the same woven field of trust, inspiration, and collaboration. The application bridges traditional Daoist cosmology of the I Ching and contemporary psychological mapping, using Insightful Color’s whimsical artwork as the primary vehicle for translation.</p>
             <p>Through an intuitive, gamified interface, users combine fundamental natural elements (trigrams) to generate one of 64 archetypal hexagrams. The app then reveals the user’s internal "Shadow, Gift, and Siddhi" states accompanied by a 3D image of a character and a child-friendly story that grounds the metaphysical concept into everyday understanding.</p>
         </div>
 
@@ -372,8 +384,35 @@
             </ul>
         </div>
 
+        <div class="section">
+            <h2>6. The Team</h2>
+            <p>Meet the visionary creators and developers bringing The Infinite Realms Oracle to life.</p>
+        </div>
+
+        <div class="gallery-hint">✦ Click Cards To Reveal ✦</div>
+        <div class="team-gallery">
+            <div class="flip-container" onclick="this.querySelector('.flip-card').classList.toggle('flipped')">
+                <div class="flip-card">
+                    <div class="card-face card-front"><img src="images/Alexandra_Front.webp" alt="Alexandra Front"></div>
+                    <div class="card-face card-back"><img src="images/Alexandra_Back.webp" alt="Alexandra Back"></div>
+                </div>
+            </div>
+            <div class="flip-container" onclick="this.querySelector('.flip-card').classList.toggle('flipped')">
+                <div class="flip-card">
+                    <div class="card-face card-front"><img src="images/Svetlana_Front.webp" alt="Svetlana Front"></div>
+                    <div class="card-face card-back"><img src="images/Svetlana_Back.webp" alt="Svetlana Back"></div>
+                </div>
+            </div>
+            <div class="flip-container" onclick="this.querySelector('.flip-card').classList.toggle('flipped')">
+                <div class="flip-card">
+                    <div class="card-face card-front"><img src="images/Brian_Front.webp" alt="Brian Front"></div>
+                    <div class="card-face card-back"><img src="images/Brian_Back.webp" alt="Brian Back"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="call-to-action">
-            <p>"By braiding creative technology, colorful art, and ancient wisdom, we can initiate a profound pathway for personal healing and community resilience."</p>
+            <p>"By weaving creative technology, colorful art, and ancient wisdom, we can initiate a profound pathway for personal healing and community resilience."</p>
             <a href="index.html" class="target-link btn-launch">Experience the App Prototype</a>
         </div>
 

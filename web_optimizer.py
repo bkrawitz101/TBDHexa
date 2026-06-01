@@ -461,8 +461,10 @@ def index():
             message = f"Success! {count} images optimized to {out_dir}."
         else:
             message = f"Error: '{in_dir}' does not exist."
-            
-    return render_template_string(HTML_TEMPLATE, message=message, errors=errors, add_prefix=add_prefix, **request.form)
+    
+    form_data = dict(request.form)
+    form_data.pop('add_prefix', None)
+    return render_template_string(HTML_TEMPLATE, message=message, errors=errors, add_prefix=add_prefix, **form_data)
 
 def get_new_stem(pattern, original_stem, current_count, add_prefix, is_pdf=False):
     if not pattern and not add_prefix:
